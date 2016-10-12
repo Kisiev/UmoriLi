@@ -5,6 +5,7 @@ import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
+import android.support.v7.widget.Toolbar;
 import android.util.Log;
 import android.view.View;
 import android.widget.Switch;
@@ -14,8 +15,12 @@ import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.ViewById;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import list.umorili.android.com.umorili.fragments.FavoriteFragment;
 import list.umorili.android.com.umorili.fragments.MainFragment;
+
 
 @EActivity(R.layout.activity_main)
 public class MainActivity extends AppCompatActivity {
@@ -27,6 +32,7 @@ public class MainActivity extends AppCompatActivity {
     TabHost tabHost;
     @AfterViews
     void main (){
+
         tabHost.setup();
         // Вкладка главная
         TabHost.TabSpec tabSpec = tabHost.newTabSpec(TAG1);
@@ -39,6 +45,8 @@ public class MainActivity extends AppCompatActivity {
         tabSpec.setContent(R.id.tab2);
         tabHost.addTab(tabSpec);
         // по умолчанию показывать главную вкладку
+        MainFragment mainFragment = new MainFragment();
+        replaceFragment(mainFragment, R.id.tab1);
         tabHost.setCurrentTabByTag(TAG1);
         tabHost.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
             @Override
@@ -47,22 +55,23 @@ public class MainActivity extends AppCompatActivity {
                     case TAG1:
                         MainFragment mainFragment = new MainFragment();
                         replaceFragment(mainFragment, R.id.tab1);
-                        Log.d("BIL", "BIVAL");
                         break;
                     case TAG2:
                         FavoriteFragment favoriteFragment = new FavoriteFragment();
                         replaceFragment(favoriteFragment, R.id.tab2);
-                        Log.d("BIL", "BIVAL");
                         break;
                 }
             }
         });
 
+
+
+
     }
+
     private void replaceFragment(Fragment fragment, int id) {
         String backStackName = fragment.getClass().getName();
 
-        Log.d("BIL", "BIVAL");
         FragmentManager manager = getSupportFragmentManager();
         boolean fragmentPopped = manager.popBackStackImmediate(backStackName, 0);
 
@@ -74,4 +83,5 @@ public class MainActivity extends AppCompatActivity {
             ft.commit();Log.d("BIL", "BIVAL");
         }
     }
+
 }
