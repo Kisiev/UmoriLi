@@ -1,37 +1,46 @@
 package list.umorili.android.com.umorili;
 
+import android.os.AsyncTask;
+import android.os.Bundle;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.AsyncTaskLoader;
+import android.support.v4.content.Loader;
 import android.support.v7.app.AppCompatActivity;
-import android.os.Bundle;
-import android.support.v7.widget.Toolbar;
+import android.support.v7.widget.RecyclerView;
 import android.util.Log;
-import android.view.View;
-import android.widget.Switch;
+import android.widget.LinearLayout;
 import android.widget.TabHost;
+import android.widget.TextView;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.ViewById;
 
-import java.util.ArrayList;
 import java.util.List;
 
+import list.umorili.android.com.umorili.adapters.MainFragtentAdapter;
+import list.umorili.android.com.umorili.entity.MainEntity;
 import list.umorili.android.com.umorili.fragments.FavoriteFragment;
 import list.umorili.android.com.umorili.fragments.MainFragment;
 
 
 @EActivity(R.layout.activity_main)
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity  {
 
     private final static String TAG1 = "tag1";
     private final static String TAG2 = "tag2";
-
+    MainEntity mainEntity;
     @ViewById
     TabHost tabHost;
+    @ViewById(R.id.main_fragment_recycler)
+    RecyclerView recyclerView;
+
     @AfterViews
     void main (){
+
 
         tabHost.setup();
         // Вкладка главная
@@ -53,6 +62,7 @@ public class MainActivity extends AppCompatActivity {
             public void onTabChanged(String s) {
                 switch (s){
                     case TAG1:
+
                         MainFragment mainFragment = new MainFragment();
                         replaceFragment(mainFragment, R.id.tab1);
                         break;
@@ -80,8 +90,15 @@ public class MainActivity extends AppCompatActivity {
             FragmentTransaction ft = manager.beginTransaction();
             ft.replace(id, fragment, backStackName);
             ft.addToBackStack(backStackName);
-            ft.commit();Log.d("BIL", "BIVAL");
+            ft.commit();
         }
     }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+
+    }
+
 
 }
