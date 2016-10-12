@@ -7,13 +7,11 @@ import android.view.ViewGroup;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
-import org.androidannotations.annotations.ViewById;
-
 import java.util.List;
 
 import list.umorili.android.com.umorili.R;
 import list.umorili.android.com.umorili.entity.MainEntity;
-import list.umorili.android.com.umorili.models.MainModel;
+import list.umorili.android.com.umorili.rest.models.MainModel;
 
 
 public class MainFragtentAdapter extends RecyclerView.Adapter<MainFragtentAdapter.MainFragmentHolder>{

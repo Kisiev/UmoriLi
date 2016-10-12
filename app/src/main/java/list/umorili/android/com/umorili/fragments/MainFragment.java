@@ -14,15 +14,13 @@ import android.view.ViewGroup;
 
 import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.EFragment;
-import org.androidannotations.annotations.ViewById;
 
-import java.util.ArrayList;
 import java.util.List;
 
 import list.umorili.android.com.umorili.R;
 import list.umorili.android.com.umorili.adapters.MainFragtentAdapter;
 import list.umorili.android.com.umorili.entity.MainEntity;
-import list.umorili.android.com.umorili.models.MainModel;
+import list.umorili.android.com.umorili.rest.models.MainModel;
 
 @EFragment(R.layout.main_fragment)
 public class MainFragment extends Fragment {
