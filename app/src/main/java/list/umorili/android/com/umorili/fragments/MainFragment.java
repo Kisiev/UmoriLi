@@ -20,7 +20,7 @@ import java.util.List;
 import list.umorili.android.com.umorili.R;
 import list.umorili.android.com.umorili.adapters.MainFragtentAdapter;
 import list.umorili.android.com.umorili.entity.MainEntity;
-import list.umorili.android.com.umorili.rest.models.MainModel;
+
 
 @EFragment(R.layout.main_fragment)
 public class MainFragment extends Fragment {
@@ -34,7 +34,7 @@ public class MainFragment extends Fragment {
         View view = inflater.inflate(R.layout.main_fragment, container, false);
         recyclerView = (RecyclerView) view.findViewById(R.id.main_fragment_recycler);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        ;
+
         return view;
     }
     @Background
@@ -45,7 +45,7 @@ public class MainFragment extends Fragment {
                 final AsyncTaskLoader<List<MainEntity>> loader = new AsyncTaskLoader<List<MainEntity>>(getActivity()) {
                     @Override
                     public List<MainEntity> loadInBackground() {
-                        return MainEntity.SelectAll();
+                        return MainEntity.listUmor();
                     }
                 };
                 loader.forceLoad();

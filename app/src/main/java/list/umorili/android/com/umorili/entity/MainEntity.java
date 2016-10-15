@@ -1,18 +1,43 @@
 package list.umorili.android.com.umorili.entity;
 
+import android.support.annotation.NonNull;
 
-import com.orm.SugarRecord;
+import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.PrimaryKey;
+import com.raizlabs.android.dbflow.annotation.Table;
+import com.raizlabs.android.dbflow.sql.language.SQLite;
+import com.raizlabs.android.dbflow.structure.BaseModel;
 
 import java.util.List;
 
-public class MainEntity extends SugarRecord{
+import list.umorili.android.com.umorili.database.AppDatabase;
 
-    public String getName() {
-        return name;
+@Table(database = AppDatabase.class, orderedCursorLookUp = true)
+public class MainEntity extends BaseModel{
+
+    @PrimaryKey()
+    private String id;
+
+    @Column(name = "content")
+    private String list;
+
+    @Column(name = "favorite")
+    private boolean favorite;
+
+    public String getId() {
+        return id;
     }
 
-    public void setName(String name) {
-        this.name = name;
+    public void setId(String id) {
+        this.id = id;
+    }
+
+    public String getList() {
+        return list;
+    }
+
+    public void setList(String list) {
+        this.list = list;
     }
 
     public boolean isFavorite() {
@@ -23,26 +48,17 @@ public class MainEntity extends SugarRecord{
         this.favorite = favorite;
     }
 
-    String name;
-    boolean favorite;
 
-    public MainEntity(){}
-
-    public MainEntity(String name, boolean favorite){
-        this.name = name;
-        this.favorite = favorite;
+    public static List<MainEntity> listUmor(){
+        return SQLite.select()
+                .from(MainEntity.class)
+                .queryList();
     }
 
-    @Override
-    public String toString() {
-        return "MainEntity{" +
-                "name='" + name + '\'' +
-                ", favorite=" + favorite +
-                '}';
-    }
-
-    public static List<MainEntity> SelectAll (){
-        List<MainEntity> mainEntities = MainEntity.listAll(MainEntity.class);
-        return mainEntities;
+    public  static void updateFavorite(@NonNull String mainId){
+        SQLite.update(MainEntity.class)
+                .set(MainEntity_Table.favorite.eq(true))
+                .where(MainEntity_Table.id.eq(mainId))
+                .execute();
     }
 }

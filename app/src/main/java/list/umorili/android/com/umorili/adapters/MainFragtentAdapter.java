@@ -4,6 +4,7 @@ import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
@@ -11,7 +12,6 @@ import java.util.List;
 
 import list.umorili.android.com.umorili.R;
 import list.umorili.android.com.umorili.entity.MainEntity;
-import list.umorili.android.com.umorili.rest.models.MainModel;
 
 
 public class MainFragtentAdapter extends RecyclerView.Adapter<MainFragtentAdapter.MainFragmentHolder>{
@@ -30,8 +30,8 @@ public class MainFragtentAdapter extends RecyclerView.Adapter<MainFragtentAdapte
     @Override
     public void onBindViewHolder(MainFragmentHolder holder, int position) {
         MainEntity mainEntity = mainEntityList.get(position);
-        holder.name.setText(mainEntity.getName());
-        holder.radioButton.setChecked(false);
+        holder.name.setText(mainEntity.getList());
+        holder.checkBox.setChecked(mainEntity.isFavorite());
     }
 
     @Override
@@ -42,11 +42,11 @@ public class MainFragtentAdapter extends RecyclerView.Adapter<MainFragtentAdapte
     class MainFragmentHolder extends RecyclerView.ViewHolder{
 
         TextView name;
-        RadioButton radioButton;
+        CheckBox checkBox;
         public MainFragmentHolder(View item){
             super(item);
             name = (TextView) item.findViewById(R.id.name_item);
-            radioButton = (RadioButton) item.findViewById(R.id.radio);
+            checkBox = (CheckBox) item.findViewById(R.id.checkbox);
         }
 
     }
