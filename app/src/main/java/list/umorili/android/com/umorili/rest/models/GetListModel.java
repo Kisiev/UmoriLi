@@ -1,4 +1,4 @@
-package list.umorili.android.com.umorili;
+package list.umorili.android.com.umorili.rest.models;
 
 import com.google.gson.annotations.SerializedName;
 

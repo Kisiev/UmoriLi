@@ -1,6 +1,6 @@
 package list.umorili.android.com.umorili.rest;
 
-import list.umorili.android.com.umorili.GetListModel;
+import list.umorili.android.com.umorili.rest.models.GetListModel;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Query;

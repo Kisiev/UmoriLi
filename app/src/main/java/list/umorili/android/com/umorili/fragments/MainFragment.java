@@ -8,6 +8,7 @@ import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,25 +16,32 @@ import android.view.ViewGroup;
 import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.EFragment;
 
+import java.io.IOException;
 import java.util.List;
 
+import list.umorili.android.com.umorili.rest.models.GetListModel;
 import list.umorili.android.com.umorili.R;
 import list.umorili.android.com.umorili.adapters.MainFragtentAdapter;
 import list.umorili.android.com.umorili.entity.MainEntity;
+import list.umorili.android.com.umorili.rest.RestService;
 
 
 @EFragment(R.layout.main_fragment)
 public class MainFragment extends Fragment {
-
+    GetListModel getListModel;
+    RestService restService;
     public static final int ID = 1;
     RecyclerView recyclerView;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
+
         View view = inflater.inflate(R.layout.main_fragment, container, false);
         recyclerView = (RecyclerView) view.findViewById(R.id.main_fragment_recycler);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
 
         return view;
     }
