@@ -25,10 +25,12 @@ import android.widget.TabHost;
 import android.widget.TextView;
 
 import org.androidannotations.annotations.AfterViews;
+import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.EActivity;
 import org.androidannotations.annotations.ViewById;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import list.umorili.android.com.umorili.rest.models.GetListModel;
@@ -44,12 +46,23 @@ public class MainActivity extends AppCompatActivity  {
 
     private final static String TAG1 = "tag1";
     private final static String TAG2 = "tag2";
-    GetListModel getListModel;
+
+    GetListModel getListModel = new GetListModel();
+    RestService restService = new RestService();
+    List<GetListModel> load ;
     @ViewById
     TabHost tabHost;
     @ViewById(R.id.main_fragment_recycler)
     RecyclerView recyclerView;
+    @Background
+    void load (){
+        try {
+                load.addAll(restService.viewListInMainFragmenr(ConstantManager.SITE, ConstantManager.NAME, ConstantManager.NUM));
 
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+    }
     @AfterViews
     void main (){
 
@@ -70,6 +83,7 @@ public class MainActivity extends AppCompatActivity  {
 
         MainFragment mainFragment = new MainFragment();
         replaceFragment(mainFragment, R.id.tab1);
+        load();
         tabHost.setCurrentTabByTag(TAG1);
         tabHost.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
             @Override

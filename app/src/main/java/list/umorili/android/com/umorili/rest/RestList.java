@@ -1,5 +1,7 @@
 package list.umorili.android.com.umorili.rest;
 
+import android.util.Log;
+
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
@@ -10,7 +12,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 
 public class RestList  {
-    public final static String BASE_NAME = "http://www.umori.li/api/";
+    public final static String BASE_NAME = "http://www.umori.li/";
 
     private UmoriliApi umoriliApi;
 

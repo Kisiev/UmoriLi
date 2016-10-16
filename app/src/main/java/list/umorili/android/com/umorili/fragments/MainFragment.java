@@ -17,6 +17,7 @@ import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.EFragment;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import list.umorili.android.com.umorili.rest.UmoriliApi;
@@ -30,14 +31,13 @@ import retrofit2.http.GET;
 
 @EFragment(R.layout.main_fragment)
 public class MainFragment extends Fragment {
-    GetListModel getListModel;
-    RestService restService;
+
     public static final int ID = 1;
     RecyclerView recyclerView;
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
+
 
         View view = inflater.inflate(R.layout.main_fragment, container, false);
         recyclerView = (RecyclerView) view.findViewById(R.id.main_fragment_recycler);
@@ -46,6 +46,8 @@ public class MainFragment extends Fragment {
 
         return view;
     }
+
+
 
     @Background
     public void loadEntity() {

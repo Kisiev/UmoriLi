@@ -3,6 +3,7 @@ package list.umorili.android.com.umorili.rest;
 import android.support.annotation.NonNull;
 
 import java.io.IOException;
+import java.util.List;
 
 import list.umorili.android.com.umorili.rest.models.GetListModel;
 
@@ -18,11 +19,11 @@ public final class RestService {
         restList = new RestList();
     }
 
-    public GetListModel viewListInMainFragmenr (@NonNull String site,
+    public List<GetListModel> viewListInMainFragmenr (@NonNull String site,
                                                 @NonNull String name,
-                                                @NonNull String num) throws IOException{
+                                                @NonNull int num) throws IOException{
 
-        return restList.getUmoriliApi()
+        return  restList.getUmoriliApi()
                 .getListModel(site, name, num)
                 .execute().body();
 
