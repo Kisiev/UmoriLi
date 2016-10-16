@@ -10,9 +10,5 @@ public interface UmoriliApi {
     @GET("get")
     Call<GetListModel> getListModel (@Query("site") String site,
                                         @Query("name") String name,
-                                        @Query("desc") String desc,
-                                        @Query("link") String link,
-                                        @Query("elementPureHtml") String elementPureHtml);
-
-
+                                        @Query("num") String num);
 }

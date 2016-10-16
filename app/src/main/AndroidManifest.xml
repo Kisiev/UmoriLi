@@ -9,7 +9,7 @@
         android:icon="@mipmap/ic_launcher"
         android:supportsRtl="true"
         android:name=".UmoriliAplication"
-        android:label="История"
+        android:label="Umoti.Li"
         android:theme="@style/AppTheme">
 
         <activity android:name=".MainActivity_">

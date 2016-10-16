@@ -10,7 +10,7 @@ import retrofit2.converter.gson.GsonConverterFactory;
  */
 
 public class RestList  {
-    public final static String BASE_NAME = "http://www.umori.li/";
+    public final static String BASE_NAME = "http://www.umori.li/api/";
 
     private UmoriliApi umoriliApi;
 

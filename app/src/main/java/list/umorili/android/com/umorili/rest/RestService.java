@@ -20,12 +20,10 @@ public final class RestService {
 
     public GetListModel viewListInMainFragmenr (@NonNull String site,
                                                 @NonNull String name,
-                                                            String desc,
-                                                            String link,
-                                                            String elementPureHtml) throws IOException{
+                                                @NonNull String num) throws IOException{
 
         return restList.getUmoriliApi()
-                .getListModel(site, name, desc, link, elementPureHtml)
+                .getListModel(site, name, num)
                 .execute().body();
 
     }
