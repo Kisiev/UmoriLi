@@ -5,11 +5,9 @@
                 xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/corn_lin">
 
-<ScrollView
-    android:layout_width="match_parent"
-    android:layout_height="match_parent">
-
-
+    <ScrollView
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
     <TabHost
         android:layout_width="match_parent"
         android:layout_height="match_parent"
@@ -26,6 +24,9 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"/>
 
+
+
+
             <FrameLayout
                 android:id="@android:id/tabcontent"
                 android:layout_width="match_parent"
@@ -36,6 +37,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="vertical">
+
                 </LinearLayout>
 
                 <LinearLayout
@@ -47,10 +49,12 @@
                 </LinearLayout>
 
             </FrameLayout>
-        </LinearLayout>
-    </TabHost>
-</ScrollView>
 
+        </LinearLayout>
+
+    </TabHost>
+
+    </ScrollView>
 
 
 </RelativeLayout>

@@ -7,9 +7,6 @@ import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-/**
- * Created by User on 15.10.2016.
- */
 
 public class RestList  {
     public final static String BASE_NAME = "http://www.umori.li/";

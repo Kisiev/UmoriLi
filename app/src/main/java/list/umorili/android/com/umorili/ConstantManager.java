@@ -5,8 +5,8 @@ package list.umorili.android.com.umorili;
  */
 
 public class ConstantManager {
-    public static final String SITE = "bush.im";
-    public static final String NAME = "bush";
-    public static final int NUM = 30;
+    public static final String SITE = "bash.im";
+    public static final String NAME = "bash";
+    public static final int NUM = 50;
 
 }

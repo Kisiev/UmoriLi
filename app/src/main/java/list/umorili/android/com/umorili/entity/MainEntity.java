@@ -11,6 +11,7 @@ import com.raizlabs.android.dbflow.structure.BaseModel;
 import java.util.List;
 
 import list.umorili.android.com.umorili.database.AppDatabase;
+import list.umorili.android.com.umorili.rest.models.GetListModel;
 
 @Table(database = AppDatabase.class, orderedCursorLookUp = true)
 public class MainEntity extends BaseModel{
@@ -60,5 +61,15 @@ public class MainEntity extends BaseModel{
                 .set(MainEntity_Table.favorite.eq(true))
                 .where(MainEntity_Table.id.eq(mainId))
                 .execute();
+    }
+    public static void insert(String name, boolean favorite){
+        SQLite.insert(MainEntity.class)
+                .columns( "content", "favorite")
+                .values( name, favorite)
+                .execute();
+    }
+
+    public void delete(){
+        SQLite.delete().from(MainEntity.class).execute();
     }
 }

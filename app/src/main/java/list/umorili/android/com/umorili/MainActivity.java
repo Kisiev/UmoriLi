@@ -49,6 +49,7 @@ public class MainActivity extends AppCompatActivity  {
 
     GetListModel getListModel = new GetListModel();
     RestService restService = new RestService();
+    MainEntity mainEntity = new MainEntity();
     List<GetListModel> load ;
     @ViewById
     TabHost tabHost;
@@ -56,12 +57,21 @@ public class MainActivity extends AppCompatActivity  {
     RecyclerView recyclerView;
     @Background
     void load (){
-        try {
-                load.addAll(restService.viewListInMainFragmenr(ConstantManager.SITE, ConstantManager.NAME, ConstantManager.NUM));
 
+        try {
+                load = (restService.viewListInMainFragmenr(ConstantManager.SITE, ConstantManager.NAME, ConstantManager.NUM));
         } catch (IOException e) {
             e.printStackTrace();
         }
+
+
+        for (int i = 0; i < ConstantManager.NUM; i ++) {
+            mainEntity.insert(load.get(i).getElementPureHtml(), false);
+        }
+    }
+
+    void delete(){
+        mainEntity.delete();
     }
     @AfterViews
     void main (){
@@ -79,11 +89,10 @@ public class MainActivity extends AppCompatActivity  {
         tabSpec.setContent(R.id.tab2);
         tabHost.addTab(tabSpec);
         // по умолчанию показывать главную вкладку
-
-
+        load();
         MainFragment mainFragment = new MainFragment();
         replaceFragment(mainFragment, R.id.tab1);
-        load();
+
         tabHost.setCurrentTabByTag(TAG1);
         tabHost.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
             @Override
@@ -93,8 +102,10 @@ public class MainActivity extends AppCompatActivity  {
 
                         MainFragment mainFragment = new MainFragment();
                         replaceFragment(mainFragment, R.id.tab1);
+
                         break;
                     case TAG2:
+
                         FavoriteFragment favoriteFragment = new FavoriteFragment();
                         replaceFragment(favoriteFragment, R.id.tab2);
                         break;
@@ -122,5 +133,15 @@ public class MainActivity extends AppCompatActivity  {
         }
     }
 
+    @Override
+    protected void onStart() {
+        super.onStart();
+        delete();
+    }
 
+    @Override
+    protected void onResume() {
+        super.onResume();
+
+    }
 }
