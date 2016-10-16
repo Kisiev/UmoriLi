@@ -3,6 +3,7 @@ package list.umorili.android.com.umorili.entity;
 import android.support.annotation.NonNull;
 
 import com.raizlabs.android.dbflow.annotation.Column;
+import com.raizlabs.android.dbflow.annotation.ConflictAction;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
@@ -13,7 +14,7 @@ import java.util.List;
 import list.umorili.android.com.umorili.database.AppDatabase;
 import list.umorili.android.com.umorili.rest.models.GetListModel;
 
-@Table(database = AppDatabase.class, orderedCursorLookUp = true)
+@Table(database = AppDatabase.class, orderedCursorLookUp = true, insertConflict = ConflictAction.REPLACE)
 public class MainEntity extends BaseModel{
 
     @PrimaryKey()
@@ -24,6 +25,7 @@ public class MainEntity extends BaseModel{
 
     @Column(name = "favorite")
     private boolean favorite;
+
 
     public String getId() {
         return id;
@@ -72,4 +74,6 @@ public class MainEntity extends BaseModel{
     public void delete(){
         SQLite.delete().from(MainEntity.class).execute();
     }
+
+
 }

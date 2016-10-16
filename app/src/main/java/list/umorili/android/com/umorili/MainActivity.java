@@ -1,7 +1,10 @@
 package list.umorili.android.com.umorili;
 
+import android.content.Context;
 import android.os.AsyncTask;
 import android.os.Bundle;
+import android.os.Handler;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
@@ -10,8 +13,10 @@ import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
 import android.support.v4.view.MenuItemCompat;
 import android.support.v4.widget.DrawerLayout;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.ActionBarDrawerToggle;
 import android.support.v7.app.AppCompatActivity;
+import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
@@ -24,15 +29,22 @@ import android.widget.LinearLayout;
 import android.widget.TabHost;
 import android.widget.TextView;
 
+import com.raizlabs.android.dbflow.config.FlowManager;
+import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper;
+import com.raizlabs.android.dbflow.structure.database.transaction.ITransaction;
+
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Random;
 
+import list.umorili.android.com.umorili.database.AppDatabase;
 import list.umorili.android.com.umorili.rest.models.GetListModel;
 import list.umorili.android.com.umorili.adapters.MainFragtentAdapter;
 import list.umorili.android.com.umorili.entity.MainEntity;
@@ -42,7 +54,7 @@ import list.umorili.android.com.umorili.rest.RestService;
 
 
 @EActivity(R.layout.activity_main)
-public class MainActivity extends AppCompatActivity  {
+public class MainActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
 
     private final static String TAG1 = "tag1";
     private final static String TAG2 = "tag2";
@@ -50,6 +62,7 @@ public class MainActivity extends AppCompatActivity  {
     GetListModel getListModel = new GetListModel();
     RestService restService = new RestService();
     MainEntity mainEntity = new MainEntity();
+    private SwipeRefreshLayout mSwipeRefreshLayout;
     List<GetListModel> load ;
     @ViewById
     TabHost tabHost;
@@ -63,11 +76,15 @@ public class MainActivity extends AppCompatActivity  {
         } catch (IOException e) {
             e.printStackTrace();
         }
-
-
+        try {
+            loadMainEntity(load);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+/*
         for (int i = 0; i < ConstantManager.NUM; i ++) {
             mainEntity.insert(load.get(i).getElementPureHtml(), false);
-        }
+        }*/
     }
 
     void delete(){
@@ -75,6 +92,9 @@ public class MainActivity extends AppCompatActivity  {
     }
     @AfterViews
     void main (){
+
+        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
+        mSwipeRefreshLayout.setOnRefreshListener(this);
 
 
         tabHost.setup();
@@ -99,10 +119,8 @@ public class MainActivity extends AppCompatActivity  {
             public void onTabChanged(String s) {
                 switch (s){
                     case TAG1:
-
                         MainFragment mainFragment = new MainFragment();
                         replaceFragment(mainFragment, R.id.tab1);
-
                         break;
                     case TAG2:
 
@@ -113,6 +131,10 @@ public class MainActivity extends AppCompatActivity  {
             }
         });
 
+        mSwipeRefreshLayout.setColorSchemeResources(android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
 
 
 
@@ -136,12 +158,45 @@ public class MainActivity extends AppCompatActivity  {
     @Override
     protected void onStart() {
         super.onStart();
-        delete();
     }
 
     @Override
     protected void onResume() {
         super.onResume();
+
+    }
+
+    public void loadMainEntity(final List<GetListModel> quotes) throws IOException {
+       // quotes = restService.viewListInMainFragmenr(ConstantManager.SITE, ConstantManager.NAME, ConstantManager.NUM);
+       // if (time != quoteEntity.getTimestp())
+        delete();
+        FlowManager.getDatabase(AppDatabase.class).executeTransaction(new ITransaction() {
+
+            @Override
+            public void execute(DatabaseWrapper databaseWrapper) {
+                MainEntity quoteEntity = new MainEntity();
+                for (GetListModel quote: quotes) {
+                    quoteEntity.setId(quote.getLink());
+                    quoteEntity.setList(quote.getElementPureHtml());
+                    quoteEntity.setFavorite(false);
+                    quoteEntity.save(databaseWrapper);
+                }
+
+            }
+        });
+
+    }
+
+
+    @Override
+    public void onRefresh() {
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mSwipeRefreshLayout.setRefreshing(false);
+                load();
+            }
+        }, 1000);
 
     }
 }
