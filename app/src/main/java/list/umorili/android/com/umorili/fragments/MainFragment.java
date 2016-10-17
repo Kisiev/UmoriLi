@@ -12,14 +12,18 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 
 import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.EFragment;
+import org.androidannotations.annotations.ViewById;
 
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import list.umorili.android.com.umorili.ConstantManager;
 import list.umorili.android.com.umorili.rest.UmoriliApi;
 import list.umorili.android.com.umorili.rest.models.GetListModel;
 import list.umorili.android.com.umorili.R;
@@ -32,12 +36,14 @@ import retrofit2.http.GET;
 @EFragment(R.layout.main_fragment)
 public class MainFragment extends Fragment {
 
-    public static final int ID = 1;
+
     RecyclerView recyclerView;
+    @ViewById(R.id.checkbox)
+    CheckBox checkBox;
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
+        Log.d("LOG", "createview");
 
         View view = inflater.inflate(R.layout.main_fragment, container, false);
         recyclerView = (RecyclerView) view.findViewById(R.id.main_fragment_recycler);
@@ -49,7 +55,8 @@ public class MainFragment extends Fragment {
 
     @Background
     public void loadEntity() {
-        getLoaderManager().restartLoader(ID, null, new LoaderManager.LoaderCallbacks<List<MainEntity>>() {
+        Log.d("LOG", "loader");
+        getLoaderManager().restartLoader(ConstantManager.ID, null, new LoaderManager.LoaderCallbacks<List<MainEntity>>() {
             @Override
             public Loader<List<MainEntity>> onCreateLoader ( int id, Bundle args){
                 final AsyncTaskLoader<List<MainEntity>> loader = new AsyncTaskLoader<List<MainEntity>>(getActivity()) {
@@ -78,17 +85,47 @@ public class MainFragment extends Fragment {
     @Override
     public void onResume() {
         super.onResume();
-        loadEntity();
+       recyclerView.setOnClickListener(new View.OnClickListener() {
+           @Override
+           public void onClick(View view) {
+                   int id = view.getId();
+                   Log.d("ID", String.valueOf(id));
+                   MainEntity.update(id);
+
+           }
+       });
     }
 
     @Override
     public void onStart() {
         super.onStart();
+        Log.d("LOG", "start");
+        loadEntity();
     }
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
+        Log.d("LOG", "create");
     }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.d("LOG", "stop");
+    }
+
+    @Override
+    public void onDestroy() {
+        super.onDestroy();
+        Log.d("LOG", "destroy");
+    }
+
+    @Override
+    public void onDestroyView() {
+        super.onDestroyView();
+        Log.d("LOG", "destroyview");
+    }
+
 
 }

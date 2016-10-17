@@ -166,6 +166,17 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
     }
 
+    @Override
+    protected void onStop() {
+        super.onStop();
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+
+    }
+
     public void loadMainEntity(final List<GetListModel> quotes) throws IOException {
        // quotes = restService.viewListInMainFragmenr(ConstantManager.SITE, ConstantManager.NAME, ConstantManager.NUM);
        // if (time != quoteEntity.getTimestp())
@@ -193,8 +204,14 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-                mSwipeRefreshLayout.setRefreshing(false);
+
                 load();
+
+                MainFragment mainFragment = new MainFragment();
+                mainFragment.onStart();
+                replaceFragment(mainFragment, R.id.tab1);
+
+                mSwipeRefreshLayout.setRefreshing(false);
             }
         }, 1000);
 

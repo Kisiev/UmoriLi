@@ -57,7 +57,12 @@ public class MainEntity extends BaseModel{
                 .from(MainEntity.class)
                 .queryList();
     }
-
+    public static List<MainEntity> listUmorFavorite(){
+        return SQLite.select()
+                .from(MainEntity.class)
+                .where(MainEntity_Table.favorite.eq(true))
+                .queryList();
+    }
     public  static void updateFavorite(@NonNull String mainId){
         SQLite.update(MainEntity.class)
                 .set(MainEntity_Table.favorite.eq(true))
@@ -69,6 +74,13 @@ public class MainEntity extends BaseModel{
                 .columns( "content", "favorite")
                 .values( name, favorite)
                 .execute();
+    }
+    public static void update(int id){
+        SQLite.update(MainEntity.class)
+                .set(MainEntity_Table.favorite.eq(true))
+                .where(MainEntity_Table.id.eq(String.valueOf(id)))
+                .execute();
+
     }
 
     public void delete(){
