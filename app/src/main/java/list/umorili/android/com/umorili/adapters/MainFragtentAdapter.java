@@ -1,11 +1,13 @@
 package list.umorili.android.com.umorili.adapters;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.Log;
 import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
@@ -16,7 +18,7 @@ import list.umorili.android.com.umorili.entity.MainEntity;
 
 
 public class MainFragtentAdapter extends RecyclerView.Adapter<MainFragtentAdapter.MainFragmentHolder>{
-    String selectedItem;
+    private String selectedItem;
     MainEntity mainEntity;
     public List<MainEntity> mainEntityList;
     public MainFragtentAdapter (List<MainEntity> mainEntity) {
@@ -30,9 +32,20 @@ public class MainFragtentAdapter extends RecyclerView.Adapter<MainFragtentAdapte
     }
 
     @Override
-    public void onBindViewHolder(MainFragmentHolder holder, int position) {
+    public void onBindViewHolder(final MainFragmentHolder holder, final int position) {
         mainEntity = mainEntityList.get(position);
         selectedItem = mainEntityList.get(position).getId();
+
+        holder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+            @Override
+            public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                if(holder.checkBox.isChecked()) {
+                    MainEntity.update(selectedItem);
+                    Log.d("LOF", "ЗАШЕЛ");
+                    mainEntity.save();
+                } else holder.checkBox.setChecked(false);
+            }
+        });
         holder.name.setText(mainEntity.getList());
         holder.checkBox.setChecked(mainEntity.isFavorite());
     }

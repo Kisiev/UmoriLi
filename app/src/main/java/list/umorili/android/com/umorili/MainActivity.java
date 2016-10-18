@@ -26,6 +26,8 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.CheckBox;
+import android.widget.CompoundButton;
 import android.widget.LinearLayout;
 import android.widget.TabHost;
 import android.widget.TextView;
@@ -64,6 +66,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     GetListModel getListModel = new GetListModel();
     RestService restService = new RestService();
     MainEntity mainEntity = new MainEntity();
+
     private SwipeRefreshLayout mSwipeRefreshLayout;
     List<GetListModel> load ;
     @ViewById
@@ -157,6 +160,10 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
             ft.addToBackStack(backStackName);
             ft.commit();
         }
+
+
+
+
     }
 
     @Override
@@ -192,7 +199,6 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
                 for (GetListModel quote: quotes) {
                     quoteEntity.setId(quote.getLink());
                     quoteEntity.setList(quote.getElementPureHtml());
-                    quoteEntity.setFavorite(false);
                     quoteEntity.save(databaseWrapper);
                 }
 

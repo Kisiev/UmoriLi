@@ -14,6 +14,10 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
 
+import com.raizlabs.android.dbflow.runtime.FlowContentObserver;
+import com.raizlabs.android.dbflow.structure.BaseModel;
+import com.raizlabs.android.dbflow.structure.Model;
+
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.EFragment;
@@ -31,14 +35,26 @@ import list.umorili.android.com.umorili.entity.MainEntity;
 @EFragment(R.layout.favorite_fragment)
 public class FavoriteFragment extends Fragment {
     RecyclerView recyclerView;
+    FlowContentObserver observer = new FlowContentObserver();
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.favorite_fragment, container, false);
         recyclerView = (RecyclerView) view.findViewById(R.id.favorite_fragment_recycler);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        observer.registerForContentChanges(getActivity(), MainEntity.class);
+        observer.addOnTableChangedListener(new FlowContentObserver.OnTableChangedListener() {
+            @Override
+            public void onTableChanged(@Nullable Class<? extends Model> tableChanged, BaseModel.Action action) {
+                loadEntity();
+            }
+        });
+
         return view;
     }
+
+
 
     @Background
     public void loadEntity() {
