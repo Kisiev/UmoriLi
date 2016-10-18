@@ -1,6 +1,7 @@
 package list.umorili.android.com.umorili;
 
 import android.content.Context;
+import android.content.Intent;
 import android.os.AsyncTask;
 import android.os.Bundle;
 import android.os.Handler;
@@ -30,6 +31,7 @@ import android.widget.TabHost;
 import android.widget.TextView;
 
 import com.raizlabs.android.dbflow.config.FlowManager;
+import com.raizlabs.android.dbflow.sql.language.Condition;
 import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper;
 import com.raizlabs.android.dbflow.structure.database.transaction.ITransaction;
 
@@ -86,6 +88,8 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
             mainEntity.insert(load.get(i).getElementPureHtml(), false);
         }*/
     }
+
+
 
     void delete(){
         mainEntity.delete();
@@ -180,7 +184,6 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     public void loadMainEntity(final List<GetListModel> quotes) throws IOException {
        // quotes = restService.viewListInMainFragmenr(ConstantManager.SITE, ConstantManager.NAME, ConstantManager.NUM);
        // if (time != quoteEntity.getTimestp())
-        delete();
         FlowManager.getDatabase(AppDatabase.class).executeTransaction(new ITransaction() {
 
             @Override
@@ -196,21 +199,15 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
             }
         });
 
-    }
 
+    }
 
     @Override
     public void onRefresh() {
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
-
                 load();
-
-                MainFragment mainFragment = new MainFragment();
-                mainFragment.onStart();
-                replaceFragment(mainFragment, R.id.tab1);
-
                 mSwipeRefreshLayout.setRefreshing(false);
             }
         }, 1000);
