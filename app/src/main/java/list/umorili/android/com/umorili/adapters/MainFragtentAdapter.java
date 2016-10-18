@@ -1,6 +1,7 @@
 package list.umorili.android.com.umorili.adapters;
 
 import android.support.v7.widget.RecyclerView;
+import android.util.SparseBooleanArray;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -15,7 +16,8 @@ import list.umorili.android.com.umorili.entity.MainEntity;
 
 
 public class MainFragtentAdapter extends RecyclerView.Adapter<MainFragtentAdapter.MainFragmentHolder>{
-
+    String selectedItem;
+    MainEntity mainEntity;
     public List<MainEntity> mainEntityList;
     public MainFragtentAdapter (List<MainEntity> mainEntity) {
         this.mainEntityList = mainEntity;
@@ -29,7 +31,8 @@ public class MainFragtentAdapter extends RecyclerView.Adapter<MainFragtentAdapte
 
     @Override
     public void onBindViewHolder(MainFragmentHolder holder, int position) {
-        MainEntity mainEntity = mainEntityList.get(position);
+        mainEntity = mainEntityList.get(position);
+        selectedItem = mainEntityList.get(position).getId();
         holder.name.setText(mainEntity.getList());
         holder.checkBox.setChecked(mainEntity.isFavorite());
     }
@@ -49,5 +52,8 @@ public class MainFragtentAdapter extends RecyclerView.Adapter<MainFragtentAdapte
             checkBox = (CheckBox) item.findViewById(R.id.checkbox);
         }
 
+    }
+    public String getPos(){
+        return selectedItem;
     }
 }

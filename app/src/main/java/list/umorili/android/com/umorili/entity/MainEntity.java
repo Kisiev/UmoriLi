@@ -75,7 +75,7 @@ public class MainEntity extends BaseModel{
                 .values( name, favorite)
                 .execute();
     }
-    public static void update(int id){
+    public static void update(String id){
         SQLite.update(MainEntity.class)
                 .set(MainEntity_Table.favorite.eq(true))
                 .where(MainEntity_Table.id.eq(String.valueOf(id)))

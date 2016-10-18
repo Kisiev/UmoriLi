@@ -16,6 +16,7 @@ import android.widget.CheckBox;
 import android.widget.CompoundButton;
 
 import org.androidannotations.annotations.Background;
+import org.androidannotations.annotations.Click;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.ViewById;
 
@@ -82,18 +83,10 @@ public class MainFragment extends Fragment {
 
     }
 
+
     @Override
     public void onResume() {
         super.onResume();
-       recyclerView.setOnClickListener(new View.OnClickListener() {
-           @Override
-           public void onClick(View view) {
-                   int id = view.getId();
-                   Log.d("ID", String.valueOf(id));
-                   MainEntity.update(id);
-
-           }
-       });
     }
 
     @Override
