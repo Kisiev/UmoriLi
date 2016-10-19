@@ -30,6 +30,7 @@ import list.umorili.android.com.umorili.ConstantManager;
 import list.umorili.android.com.umorili.R;
 import list.umorili.android.com.umorili.adapters.FavoriteFragmentAdapter;
 import list.umorili.android.com.umorili.adapters.MainFragtentAdapter;
+import list.umorili.android.com.umorili.entity.FavoriteEntity;
 import list.umorili.android.com.umorili.entity.MainEntity;
 
 @EFragment(R.layout.favorite_fragment)
@@ -42,8 +43,7 @@ public class FavoriteFragment extends Fragment {
         View view = inflater.inflate(R.layout.favorite_fragment, container, false);
         recyclerView = (RecyclerView) view.findViewById(R.id.favorite_fragment_recycler);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-
-        observer.registerForContentChanges(getActivity(), MainEntity.class);
+        observer.registerForContentChanges(getActivity(), FavoriteEntity.class);
         observer.addOnTableChangedListener(new FlowContentObserver.OnTableChangedListener() {
             @Override
             public void onTableChanged(@Nullable Class<? extends Model> tableChanged, BaseModel.Action action) {
@@ -58,13 +58,13 @@ public class FavoriteFragment extends Fragment {
 
     @Background
     public void loadEntity() {
-        getLoaderManager().restartLoader(ConstantManager.ID, null, new LoaderManager.LoaderCallbacks<List<MainEntity>>() {
+        getLoaderManager().restartLoader(ConstantManager.ID_FRAGMENT, null, new LoaderManager.LoaderCallbacks<List<FavoriteEntity>>() {
             @Override
-            public Loader<List<MainEntity>> onCreateLoader (int id, Bundle args){
-                final AsyncTaskLoader<List<MainEntity>> loader = new AsyncTaskLoader<List<MainEntity>>(getActivity()) {
+            public Loader<List<FavoriteEntity>> onCreateLoader (int id, Bundle args){
+                final AsyncTaskLoader<List<FavoriteEntity>> loader = new AsyncTaskLoader<List<FavoriteEntity>>(getActivity()) {
                     @Override
-                    public List<MainEntity> loadInBackground() {
-                        return MainEntity.listUmorFavorite();
+                    public List<FavoriteEntity> loadInBackground() {
+                        return FavoriteEntity.selectedALL();
                     }
                 };
                 loader.forceLoad();
@@ -72,12 +72,12 @@ public class FavoriteFragment extends Fragment {
             }
 
             @Override
-            public void onLoadFinished (Loader < List < MainEntity >> loader, List < MainEntity > data){
+            public void onLoadFinished (Loader < List < FavoriteEntity >> loader, List < FavoriteEntity > data){
                 recyclerView.setAdapter(new FavoriteFragmentAdapter(data));
             }
 
             @Override
-            public void onLoaderReset (Loader < List < MainEntity >> loader) {
+            public void onLoaderReset (Loader < List < FavoriteEntity >> loader) {
             }
         });
 

@@ -49,6 +49,7 @@ import java.util.List;
 import java.util.Random;
 
 import list.umorili.android.com.umorili.database.AppDatabase;
+import list.umorili.android.com.umorili.entity.FavoriteEntity;
 import list.umorili.android.com.umorili.rest.models.GetListModel;
 import list.umorili.android.com.umorili.adapters.MainFragtentAdapter;
 import list.umorili.android.com.umorili.entity.MainEntity;
@@ -66,6 +67,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     GetListModel getListModel = new GetListModel();
     RestService restService = new RestService();
     MainEntity mainEntity = new MainEntity();
+    FavoriteEntity favoriteEntity = new FavoriteEntity();
 
     private SwipeRefreshLayout mSwipeRefreshLayout;
     List<GetListModel> load ;
@@ -86,16 +88,14 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         } catch (IOException e) {
             e.printStackTrace();
         }
-/*
-        for (int i = 0; i < ConstantManager.NUM; i ++) {
-            mainEntity.insert(load.get(i).getElementPureHtml(), false);
-        }*/
+
     }
 
 
 
     void delete(){
-        mainEntity.delete();
+        FavoriteEntity.deleteAll();
+        MainEntity.deleteAll();
     }
     @AfterViews
     void main (){
@@ -116,10 +116,10 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         tabSpec.setContent(R.id.tab2);
         tabHost.addTab(tabSpec);
         // по умолчанию показывать главную вкладку
+        delete();
         load();
         MainFragment mainFragment = new MainFragment();
         replaceFragment(mainFragment, R.id.tab1);
-
         tabHost.setCurrentTabByTag(TAG1);
         tabHost.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
             @Override
@@ -199,6 +199,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
                 for (GetListModel quote: quotes) {
                     quoteEntity.setId(quote.getLink());
                     quoteEntity.setList(quote.getElementPureHtml());
+                    quoteEntity.setFavorite(false);
                     quoteEntity.save(databaseWrapper);
                 }
 
@@ -213,6 +214,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         new Handler().postDelayed(new Runnable() {
             @Override
             public void run() {
+                delete();
                 load();
                 mSwipeRefreshLayout.setRefreshing(false);
             }

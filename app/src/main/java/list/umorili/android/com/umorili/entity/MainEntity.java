@@ -14,7 +14,7 @@ import java.util.List;
 import list.umorili.android.com.umorili.database.AppDatabase;
 import list.umorili.android.com.umorili.rest.models.GetListModel;
 
-@Table(database = AppDatabase.class, orderedCursorLookUp = true, insertConflict = ConflictAction.REPLACE)
+@Table(database = AppDatabase.class, insertConflict = ConflictAction.REPLACE)
 public class MainEntity extends BaseModel{
 
     @PrimaryKey()
@@ -58,33 +58,22 @@ public class MainEntity extends BaseModel{
                 .queryList();
     }
     public static List<MainEntity> listUmorFavorite(){
-        return SQLite.select()
+        return SQLite.select(MainEntity_Table.content)
                 .from(MainEntity.class)
                 .where(MainEntity_Table.favorite.eq(true))
                 .queryList();
     }
-    public  static void updateFavorite(@NonNull String mainId){
+    public  static void updateFavorite(@NonNull String mainId, boolean b){
         SQLite.update(MainEntity.class)
-                .set(MainEntity_Table.favorite.eq(true))
+                .set(MainEntity_Table.favorite.eq(b))
                 .where(MainEntity_Table.id.eq(mainId))
-                .execute();
-    }
-    public static void insert(String name, boolean favorite){
-        SQLite.insert(MainEntity.class)
-                .columns( "content", "favorite")
-                .values( name, favorite)
-                .execute();
-    }
-    public static void update(String id){
-        SQLite.update(MainEntity.class)
-                .set(MainEntity_Table.favorite.eq(true))
-                .where(MainEntity_Table.id.eq(String.valueOf(id)))
-                .execute();
-
+                .queryList();
     }
 
-    public void delete(){
-        SQLite.delete().from(MainEntity.class).execute();
+
+
+    public static void deleteAll(){
+        SQLite.delete().from(MainEntity.class).async().execute();
     }
 
 

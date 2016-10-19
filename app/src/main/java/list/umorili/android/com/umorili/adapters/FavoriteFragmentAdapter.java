@@ -11,35 +11,33 @@ import java.util.List;
 import java.util.zip.Inflater;
 
 import list.umorili.android.com.umorili.R;
+import list.umorili.android.com.umorili.entity.FavoriteEntity;
 import list.umorili.android.com.umorili.entity.MainEntity;
 
-/**
- * Created by User on 12.10.2016.
- */
 
 public class FavoriteFragmentAdapter extends RecyclerView.Adapter<FavoriteFragmentAdapter.FavoriteFragmentHolder>{
-
-    List<MainEntity> mainEntityList;
-    public FavoriteFragmentAdapter(List<MainEntity> mainEntity) {
-        this.mainEntityList = mainEntity;
+    FavoriteEntity favoriteEntity;
+    List<FavoriteEntity> favoriteEntityList;
+    public FavoriteFragmentAdapter(List<FavoriteEntity> favoriteEntity) {
+        this.favoriteEntityList = favoriteEntity;
     }
 
     @Override
     public FavoriteFragmentHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
-                .inflate(R.layout.main_fragment_item, parent, false);
+                .inflate(R.layout.favorite_fragment_item, parent, false);
         return new FavoriteFragmentHolder(view);
     }
 
     @Override
     public void onBindViewHolder(FavoriteFragmentHolder holder, int position) {
-        MainEntity mainEntity = mainEntityList.get(position);
-        holder.name.setText(mainEntity.getList());
+        favoriteEntity = favoriteEntityList.get(position);
+        holder.name.setText(favoriteEntity.getList());
     }
 
     @Override
     public int getItemCount() {
-        return mainEntityList.size();
+        return favoriteEntityList.size();
     }
 
     class FavoriteFragmentHolder extends RecyclerView.ViewHolder{
