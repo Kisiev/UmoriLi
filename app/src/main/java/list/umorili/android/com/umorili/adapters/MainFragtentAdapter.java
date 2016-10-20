@@ -12,12 +12,15 @@ import android.widget.CompoundButton;
 import android.widget.RadioButton;
 import android.widget.TextView;
 
+import com.raizlabs.android.dbflow.sql.language.SQLite;
+
 import org.androidannotations.annotations.Background;
 
 import java.util.List;
 
 import list.umorili.android.com.umorili.R;
 import list.umorili.android.com.umorili.entity.FavoriteEntity;
+import list.umorili.android.com.umorili.entity.FavoriteEntity_Table;
 import list.umorili.android.com.umorili.entity.MainEntity;
 
 
@@ -47,29 +50,17 @@ public class MainFragtentAdapter extends RecyclerView.Adapter<MainFragtentAdapte
     @Override
     public void onBindViewHolder(final MainFragmentHolder holder, final int position) {
         mainEntity = mainEntityList.get(position);
-        selected_id = mainEntityList.get(position).getId();
+
         holder.name.setText(mainEntity.getList());
         holder.checkBox.setChecked(mainEntity.isFavorite());
-        /*holder.name.setOnClickListener(new View.OnClickListener() {
-            @Override
-            public void onClick(View view) {
-                if (!holder.checkBox.isChecked()) {
-                    holder.checkBox.setChecked(true);
-                    Log.d("ADAPTER",mainEntity.getList());
-                    FavoriteEntity.insert(mainEntity.getList());
-                }else {
-                    holder.checkBox.setChecked(false);
-
-                }
-
-            }
-        });*/
 
         holder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
+                //selected_id = mainEntityList.get(position).getId();
                 if (holder.checkBox.isChecked()) {
-                    FavoriteEntity.insert(selected_id);
+                    if(SQLite.select().from(FavoriteEntity.class).where(FavoriteEntity_Table.id_list.eq(mainEntityList.get(position).getId())).queryList().isEmpty())
+                    FavoriteEntity.insert(mainEntityList.get(position).getId(), mainEntityList.get(position).getList());
                 }
             }
         });

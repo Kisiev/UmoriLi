@@ -1,5 +1,6 @@
 package list.umorili.android.com.umorili.entity;
 
+import android.database.Cursor;
 import android.util.Log;
 
 import com.raizlabs.android.dbflow.annotation.Column;
@@ -19,12 +20,23 @@ public class FavoriteEntity extends BaseModel{
     @PrimaryKey()
     private String id;
 
+    @Column(name = "id_list")
+    private String id_list;
+
     @Column(name = "favorite_list")
     private String list;
+
     public String getId() {
         return id;
     }
 
+    public String getId_list() {
+        return id_list;
+    }
+
+    public void setId_list(String id_list) {
+        this.id_list = id_list;
+    }
     public void setId(String id) {
         this.id = id;
     }
@@ -39,13 +51,12 @@ public class FavoriteEntity extends BaseModel{
 
 
 
-    public static void insert (String id){
-        SQLite.insert(FavoriteEntity.class)
-                .columns("favorite_list")
-                .values(SQLite.select(MainEntity_Table.content)
-                .from(MainEntity.class)
-                .where(MainEntity_Table.id.eq(id)).querySingle())
-                .execute();
+    public static void insert (String id, String value){
+            SQLite.insert(FavoriteEntity.class)
+                    .columns("id_list", "favorite_list")
+                    .values(id, value)
+                    .execute();
+
     }
 
     public static List<FavoriteEntity> selectedALL(){

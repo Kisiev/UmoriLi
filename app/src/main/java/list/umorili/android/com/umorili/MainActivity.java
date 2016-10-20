@@ -94,7 +94,6 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
 
     void delete(){
-        FavoriteEntity.deleteAll();
         MainEntity.deleteAll();
     }
     @AfterViews
