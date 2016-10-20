@@ -61,6 +61,9 @@ public class MainFragtentAdapter extends RecyclerView.Adapter<MainFragtentAdapte
                 if (holder.checkBox.isChecked()) {
                     if(SQLite.select().from(FavoriteEntity.class).where(FavoriteEntity_Table.id_list.eq(mainEntityList.get(position).getId())).queryList().isEmpty())
                     FavoriteEntity.insert(mainEntityList.get(position).getId(), mainEntityList.get(position).getList());
+
+                }else {
+                    FavoriteEntity.deleteAll(mainEntityList.get(position).getId());
                 }
             }
         });

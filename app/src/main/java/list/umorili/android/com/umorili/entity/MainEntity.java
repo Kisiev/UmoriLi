@@ -9,12 +9,15 @@ import com.raizlabs.android.dbflow.annotation.Table;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
+import org.androidannotations.annotations.Bean;
+import org.androidannotations.annotations.EBean;
+
 import java.util.List;
 
 import list.umorili.android.com.umorili.database.AppDatabase;
 import list.umorili.android.com.umorili.rest.models.GetListModel;
 
-@Table(database = AppDatabase.class, insertConflict = ConflictAction.REPLACE)
+@Table(database = AppDatabase.class,insertConflict = ConflictAction.REPLACE)
 public class MainEntity extends BaseModel{
 
     @PrimaryKey()

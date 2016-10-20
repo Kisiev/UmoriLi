@@ -22,6 +22,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.SearchView;
 import android.support.v7.widget.Toolbar;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
@@ -34,12 +35,15 @@ import android.widget.TextView;
 
 import com.raizlabs.android.dbflow.config.FlowManager;
 import com.raizlabs.android.dbflow.sql.language.Condition;
+import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper;
 import com.raizlabs.android.dbflow.structure.database.transaction.ITransaction;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Background;
+import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.EBean;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
 
@@ -50,6 +54,7 @@ import java.util.Random;
 
 import list.umorili.android.com.umorili.database.AppDatabase;
 import list.umorili.android.com.umorili.entity.FavoriteEntity;
+import list.umorili.android.com.umorili.entity.FavoriteEntity_Table;
 import list.umorili.android.com.umorili.rest.models.GetListModel;
 import list.umorili.android.com.umorili.adapters.MainFragtentAdapter;
 import list.umorili.android.com.umorili.entity.MainEntity;
@@ -64,6 +69,8 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     private final static String TAG1 = "tag1";
     private final static String TAG2 = "tag2";
 
+
+
     GetListModel getListModel = new GetListModel();
     RestService restService = new RestService();
     MainEntity mainEntity = new MainEntity();
@@ -73,6 +80,8 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     List<GetListModel> load ;
     @ViewById
     TabHost tabHost;
+    @ViewById(R.id.name_item_favorite)
+    TextView name_item;
     @ViewById(R.id.main_fragment_recycler)
     RecyclerView recyclerView;
     @Background
@@ -92,15 +101,15 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     }
 
 
-
     void delete(){
-        MainEntity.deleteAll();
+       // MainEntity.deleteAll();
     }
     @AfterViews
     void main (){
 
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
         mSwipeRefreshLayout.setOnRefreshListener(this);
+
 
 
         tabHost.setup();
@@ -146,6 +155,8 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
     }
 
+
+
     private void replaceFragment(Fragment fragment, int id) {
         String backStackName = fragment.getClass().getName();
 
@@ -165,28 +176,6 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
     }
 
-    @Override
-    protected void onStart() {
-        super.onStart();
-    }
-
-    @Override
-    protected void onResume() {
-        super.onResume();
-
-    }
-
-    @Override
-    protected void onStop() {
-        super.onStop();
-    }
-
-    @Override
-    protected void onDestroy() {
-        super.onDestroy();
-
-    }
-
     public void loadMainEntity(final List<GetListModel> quotes) throws IOException {
        // quotes = restService.viewListInMainFragmenr(ConstantManager.SITE, ConstantManager.NAME, ConstantManager.NUM);
        // if (time != quoteEntity.getTimestp())
@@ -198,7 +187,9 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
                 for (GetListModel quote: quotes) {
                     quoteEntity.setId(quote.getLink());
                     quoteEntity.setList(quote.getElementPureHtml());
+                    if (SQLite.select().from(FavoriteEntity.class).where(FavoriteEntity_Table.id_list.eq(quote.getLink())).queryList().size() <= 0 )
                     quoteEntity.setFavorite(false);
+                    else  quoteEntity.setFavorite(true);
                     quoteEntity.save(databaseWrapper);
                 }
 

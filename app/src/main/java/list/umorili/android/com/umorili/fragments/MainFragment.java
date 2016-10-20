@@ -29,6 +29,7 @@ import com.raizlabs.android.dbflow.structure.database.transaction.ITransaction;
 
 import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.Click;
+import org.androidannotations.annotations.EBean;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
@@ -50,7 +51,6 @@ import list.umorili.android.com.umorili.adapters.MainFragtentAdapter;
 import list.umorili.android.com.umorili.entity.MainEntity;
 import list.umorili.android.com.umorili.rest.RestService;
 import retrofit2.http.GET;
-
 
 @EFragment(R.layout.main_fragment)
 public class MainFragment extends Fragment{

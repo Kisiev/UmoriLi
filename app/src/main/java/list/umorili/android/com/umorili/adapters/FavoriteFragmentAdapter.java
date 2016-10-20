@@ -1,5 +1,6 @@
 package list.umorili.android.com.umorili.adapters;
 
+import android.support.v7.view.menu.MenuView;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -33,6 +34,13 @@ public class FavoriteFragmentAdapter extends RecyclerView.Adapter<FavoriteFragme
     public void onBindViewHolder(FavoriteFragmentHolder holder, int position) {
         favoriteEntity = favoriteEntityList.get(position);
         holder.name.setText(favoriteEntity.getList());
+
+        holder.name.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+
+            }
+        });
     }
 
     @Override

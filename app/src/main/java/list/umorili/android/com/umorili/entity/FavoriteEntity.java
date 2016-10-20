@@ -10,6 +10,8 @@ import com.raizlabs.android.dbflow.annotation.Table;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 
+import org.androidannotations.annotations.EBean;
+
 import java.util.List;
 
 import list.umorili.android.com.umorili.database.AppDatabase;
@@ -67,9 +69,10 @@ public class FavoriteEntity extends BaseModel{
 
     }
 
-    public static void deleteAll(){
+    public static void deleteAll(String id){
         SQLite.delete()
                 .from(FavoriteEntity.class)
+                .where(FavoriteEntity_Table.id_list.eq(id))
                 .async()
                 .execute();
     }

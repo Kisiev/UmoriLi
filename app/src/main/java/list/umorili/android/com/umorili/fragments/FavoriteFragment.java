@@ -9,6 +9,7 @@ import android.support.v4.content.Loader;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
+import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -20,6 +21,7 @@ import com.raizlabs.android.dbflow.structure.Model;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Background;
+import org.androidannotations.annotations.EBean;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.ViewById;
 
@@ -36,6 +38,8 @@ import list.umorili.android.com.umorili.entity.MainEntity;
 @EFragment(R.layout.favorite_fragment)
 public class FavoriteFragment extends Fragment {
     RecyclerView recyclerView;
+    @ViewById(R.id.name_item_favorite)
+    TextView name_item;
     FlowContentObserver observer = new FlowContentObserver();
     @Nullable
     @Override
@@ -51,9 +55,9 @@ public class FavoriteFragment extends Fragment {
             }
         });
 
+
         return view;
     }
-
 
 
     @Background

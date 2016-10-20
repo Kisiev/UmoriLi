@@ -2,6 +2,8 @@ package list.umorili.android.com.umorili.rest;
 
 import android.support.annotation.NonNull;
 
+import org.androidannotations.annotations.EBean;
+
 import java.io.IOException;
 import java.util.List;
 
