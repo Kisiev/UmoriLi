@@ -69,12 +69,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     private final static String TAG1 = "tag1";
     private final static String TAG2 = "tag2";
 
-
-
-    GetListModel getListModel = new GetListModel();
     RestService restService = new RestService();
-    MainEntity mainEntity = new MainEntity();
-    FavoriteEntity favoriteEntity = new FavoriteEntity();
 
     private SwipeRefreshLayout mSwipeRefreshLayout;
     List<GetListModel> load ;
@@ -84,6 +79,9 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     TextView name_item;
     @ViewById(R.id.main_fragment_recycler)
     RecyclerView recyclerView;
+    @ViewById
+    Toolbar toolbar;
+
     @Background
     void load (){
 
@@ -110,9 +108,8 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
         mSwipeRefreshLayout.setOnRefreshListener(this);
 
-
-
         tabHost.setup();
+        setSupportActionBar(toolbar);
         // Вкладка главная
         TabHost.TabSpec tabSpec = tabHost.newTabSpec(TAG1);
         tabSpec.setIndicator(getString(R.string.main_tab));
@@ -128,6 +125,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         load();
         MainFragment mainFragment = new MainFragment();
         replaceFragment(mainFragment, R.id.tab1);
+        setTitle(getString(R.string.history_title));
         tabHost.setCurrentTabByTag(TAG1);
         tabHost.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
             @Override
@@ -136,11 +134,13 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
                     case TAG1:
                         MainFragment mainFragment = new MainFragment();
                         replaceFragment(mainFragment, R.id.tab1);
+                        setTitle(getString(R.string.history_title));
                         break;
                     case TAG2:
 
                         FavoriteFragment favoriteFragment = new FavoriteFragment();
                         replaceFragment(favoriteFragment, R.id.tab2);
+                        setTitle(getString(R.string.favorite));
                         break;
                 }
             }
@@ -174,6 +174,12 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
 
 
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        getMenuInflater().inflate(R.menu.menu_activity, menu);
+        return true;
     }
 
     public void loadMainEntity(final List<GetListModel> quotes) throws IOException {

@@ -9,10 +9,11 @@
         android:icon="@mipmap/ic_launcher"
         android:supportsRtl="true"
         android:name=".UmoriliAplication"
-        android:label="BASHim"
+        android:label="Bssh.im"
         android:theme="@style/AppTheme">
 
-        <activity android:name=".MainActivity_">
+        <activity android:name=".MainActivity_"
+            android:theme="@style/AppTheme.NoActionBar">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN"/>
 

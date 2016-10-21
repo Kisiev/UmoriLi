@@ -58,6 +58,7 @@ public class MainEntity extends BaseModel{
     public static List<MainEntity> listUmor(){
         return SQLite.select()
                 .from(MainEntity.class)
+                .orderBy(MainEntity_Table.id, false)
                 .queryList();
     }
     public static List<MainEntity> listUmorFavorite(){

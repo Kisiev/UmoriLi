@@ -3,4 +3,7 @@
     <string name="main_tab">Главная</string>
     <string name="favorite_tab">Избранное</string>
     <string name="setting_menu">Настройки</string>
+    <string name="history_title">Вся история</string>
+    <string name="favorite">Избранное</string>
+    <string name="deleteall">Удалить все</string>
 </resources>
