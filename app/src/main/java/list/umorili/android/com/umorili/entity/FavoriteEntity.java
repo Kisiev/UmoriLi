@@ -16,7 +16,7 @@ import java.util.List;
 
 import list.umorili.android.com.umorili.database.AppDatabase;
 
-@Table(database = AppDatabase.class, insertConflict = ConflictAction.REPLACE)
+@Table(database = AppDatabase.class, insertConflict = ConflictAction.ABORT)
 public class FavoriteEntity extends BaseModel{
 
     @PrimaryKey()
@@ -69,13 +69,17 @@ public class FavoriteEntity extends BaseModel{
 
     }
 
-    public static void deleteAll(String id){
+    public static void delete(String id){
         SQLite.delete()
                 .from(FavoriteEntity.class)
                 .where(FavoriteEntity_Table.id_list.eq(id))
                 .async()
                 .execute();
     }
-
+    public static void deleteAllFavorite(){
+        SQLite.delete(FavoriteEntity.class)
+                .async()
+                .execute();
+    }
 
 }

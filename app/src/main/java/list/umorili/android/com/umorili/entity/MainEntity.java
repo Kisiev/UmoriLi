@@ -17,7 +17,7 @@ import java.util.List;
 import list.umorili.android.com.umorili.database.AppDatabase;
 import list.umorili.android.com.umorili.rest.models.GetListModel;
 
-@Table(database = AppDatabase.class,insertConflict = ConflictAction.REPLACE)
+@Table(database = AppDatabase.class,insertConflict = ConflictAction.ABORT)
 public class MainEntity extends BaseModel{
 
     @PrimaryKey()

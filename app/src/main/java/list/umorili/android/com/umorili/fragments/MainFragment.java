@@ -73,6 +73,7 @@ public class MainFragment extends Fragment{
         observer.addOnTableChangedListener(new FlowContentObserver.OnTableChangedListener() {
             @Override
             public void onTableChanged(@Nullable Class<? extends Model> tableChanged, BaseModel.Action action) {
+                Log.d("DETECT", "start");
                 loadEntity();
             }
         });

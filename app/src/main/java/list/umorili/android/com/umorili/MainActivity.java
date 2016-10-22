@@ -27,6 +27,7 @@ import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
 import android.widget.AdapterView;
+import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.LinearLayout;
@@ -82,6 +83,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     @ViewById
     Toolbar toolbar;
 
+
     @Background
     void load (){
 
@@ -100,7 +102,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
 
     void delete(){
-       // MainEntity.deleteAll();
+        MainEntity.deleteAll();
     }
     @AfterViews
     void main (){
@@ -172,8 +174,6 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         }
 
 
-
-
     }
 
     @Override
@@ -181,6 +181,18 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         getMenuInflater().inflate(R.menu.menu_activity, menu);
         return true;
     }
+
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        int id = item.getItemId();
+        if (id == R.id.action_delete_bt) {
+            FavoriteEntity.deleteAllFavorite();
+        }
+
+        return super.onOptionsItemSelected(item);
+    }
+
 
     public void loadMainEntity(final List<GetListModel> quotes) throws IOException {
        // quotes = restService.viewListInMainFragmenr(ConstantManager.SITE, ConstantManager.NAME, ConstantManager.NUM);

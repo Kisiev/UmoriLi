@@ -63,7 +63,7 @@ public class MainFragtentAdapter extends RecyclerView.Adapter<MainFragtentAdapte
                     FavoriteEntity.insert(mainEntityList.get(position).getId(), mainEntityList.get(position).getList());
 
                 }else {
-                    FavoriteEntity.deleteAll(mainEntityList.get(position).getId());
+                    FavoriteEntity.delete(mainEntityList.get(position).getId());
                 }
             }
         });
