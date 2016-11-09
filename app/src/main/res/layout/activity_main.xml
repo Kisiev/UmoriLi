@@ -5,14 +5,22 @@
               android:orientation="vertical"
                 xmlns:app="http://schemas.android.com/apk/res-auto"
                 android:id="@+id/corn_lin">
-<android.support.v7.widget.Toolbar
-    android:layout_width="match_parent"
-    android:layout_height="?attr/actionBarSize"
-    android:background="?attr/colorPrimary"
-    app:titleTextColor="@color/colorText"
-    android:id="@+id/toolbar">
 
-</android.support.v7.widget.Toolbar>
+    <android.support.design.widget.AppBarLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:id="@+id/app_bar_layout"
+        android:theme="@style/AppTheme.AppBarOverlay">
+
+        <android.support.v7.widget.Toolbar
+            android:id="@+id/toolbar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            app:popupTheme="@style/AppTheme.PopupOverlay" />
+
+
+
+    </android.support.design.widget.AppBarLayout>
 
     <TabHost
         android:layout_width="match_parent"
