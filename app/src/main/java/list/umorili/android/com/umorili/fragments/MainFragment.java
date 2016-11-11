@@ -1,7 +1,9 @@
 package list.umorili.android.com.umorili.fragments;
 
+import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
+import android.preference.PreferenceManager;
 import android.support.annotation.NonNull;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -19,12 +21,15 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 
+import com.evernote.android.job.JobManager;
 import com.raizlabs.android.dbflow.config.FlowManager;
 import com.raizlabs.android.dbflow.runtime.FlowContentObserver;
 import com.raizlabs.android.dbflow.sql.language.SQLCondition;
+import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 import com.raizlabs.android.dbflow.structure.Model;
 import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper;
+import com.raizlabs.android.dbflow.structure.database.transaction.DefaultTransactionManager;
 import com.raizlabs.android.dbflow.structure.database.transaction.ITransaction;
 
 import org.androidannotations.annotations.Background;
@@ -41,21 +46,18 @@ import java.util.Observable;
 import java.util.Observer;
 
 import list.umorili.android.com.umorili.ConstantManager;
-import list.umorili.android.com.umorili.MainActivity;
-import list.umorili.android.com.umorili.MainActivity_;
-import list.umorili.android.com.umorili.database.AppDatabase;
-import list.umorili.android.com.umorili.rest.UmoriliApi;
-import list.umorili.android.com.umorili.rest.models.GetListModel;
+
 import list.umorili.android.com.umorili.R;
 import list.umorili.android.com.umorili.adapters.MainFragtentAdapter;
 import list.umorili.android.com.umorili.entity.MainEntity;
-import list.umorili.android.com.umorili.rest.RestService;
-import retrofit2.http.GET;
+
+import static android.content.Context.KEYGUARD_SERVICE;
+import static android.content.Context.MODE_PRIVATE;
+
 
 @EFragment(R.layout.main_fragment)
 public class MainFragment extends Fragment{
 
-    SwipeRefreshLayout mSwipeRefreshLayout;
     FlowContentObserver observer = new FlowContentObserver();
     RecyclerView recyclerView;
     @ViewById(R.id.checkbox)
@@ -68,16 +70,13 @@ public class MainFragment extends Fragment{
         recyclerView = (RecyclerView) view.findViewById(R.id.main_fragment_recycler);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
-
         observer.registerForContentChanges(getActivity(), MainEntity.class);
         observer.addOnTableChangedListener(new FlowContentObserver.OnTableChangedListener() {
             @Override
             public void onTableChanged(@Nullable Class<? extends Model> tableChanged, BaseModel.Action action) {
-                Log.d("DETECT", "start");
                 loadEntity();
             }
         });
-
 
         return view;
     }
@@ -107,10 +106,7 @@ public class MainFragment extends Fragment{
             public void onLoaderReset (Loader < List < MainEntity >> loader) {
             }
         });
-
-
     }
-
 
     @Override
     public void onResume() {

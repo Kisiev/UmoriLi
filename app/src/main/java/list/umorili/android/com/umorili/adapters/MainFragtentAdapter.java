@@ -18,8 +18,11 @@ import org.androidannotations.annotations.Background;
 
 import java.util.List;
 
+import list.umorili.android.com.umorili.MainActivity;
 import list.umorili.android.com.umorili.R;
 import list.umorili.android.com.umorili.entity.FavoriteEntity;
+
+
 import list.umorili.android.com.umorili.entity.FavoriteEntity_Table;
 import list.umorili.android.com.umorili.entity.MainEntity;
 
@@ -45,14 +48,13 @@ public class MainFragtentAdapter extends RecyclerView.Adapter<MainFragtentAdapte
         return new MainFragmentHolder(view);
     }
 
-
-
     @Override
     public void onBindViewHolder(final MainFragmentHolder holder, final int position) {
         mainEntity = mainEntityList.get(position);
 
         holder.name.setText(mainEntity.getList());
         holder.checkBox.setChecked(mainEntity.isFavorite());
+        holder.time.setText(mainEntity.getTime());
 
         holder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
             @Override
@@ -79,10 +81,12 @@ public class MainFragtentAdapter extends RecyclerView.Adapter<MainFragtentAdapte
 
         TextView name;
         CheckBox checkBox;
+        TextView time;
         public MainFragmentHolder(View item){
             super(item);
             name = (TextView) item.findViewById(R.id.name_item);
             checkBox = (CheckBox) item.findViewById(R.id.checkbox);
+            time = (TextView) item.findViewById(R.id.time);
         }
 
     }

@@ -17,7 +17,7 @@ import java.util.List;
 import list.umorili.android.com.umorili.database.AppDatabase;
 import list.umorili.android.com.umorili.rest.models.GetListModel;
 
-@Table(database = AppDatabase.class,insertConflict = ConflictAction.ABORT)
+@Table(database = AppDatabase.class,insertConflict = ConflictAction.REPLACE)
 public class MainEntity extends BaseModel{
 
     @PrimaryKey()
@@ -29,6 +29,16 @@ public class MainEntity extends BaseModel{
     @Column(name = "favorite")
     private boolean favorite;
 
+    @Column(name = "time")
+    private String time;
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
+    }
 
     public String getId() {
         return id;

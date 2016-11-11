@@ -34,6 +34,9 @@ import android.widget.LinearLayout;
 import android.widget.TabHost;
 import android.widget.TextView;
 
+import com.evernote.android.job.Job;
+import com.evernote.android.job.JobManager;
+import com.evernote.android.job.JobRequest;
 import com.raizlabs.android.dbflow.config.FlowManager;
 import com.raizlabs.android.dbflow.sql.language.Condition;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
@@ -49,19 +52,25 @@ import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
 
 import java.io.IOException;
+import java.sql.Time;
 import java.util.ArrayList;
+import java.util.Calendar;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.TimeUnit;
 
 import list.umorili.android.com.umorili.database.AppDatabase;
 import list.umorili.android.com.umorili.entity.FavoriteEntity;
 import list.umorili.android.com.umorili.entity.FavoriteEntity_Table;
+import list.umorili.android.com.umorili.entity.MainEntity_Table;
 import list.umorili.android.com.umorili.rest.models.GetListModel;
 import list.umorili.android.com.umorili.adapters.MainFragtentAdapter;
 import list.umorili.android.com.umorili.entity.MainEntity;
 import list.umorili.android.com.umorili.fragments.FavoriteFragment;
 import list.umorili.android.com.umorili.fragments.MainFragment;
 import list.umorili.android.com.umorili.rest.RestService;
+import list.umorili.android.com.umorili.sync.BashJobCreater;
+import list.umorili.android.com.umorili.sync.BashSyncJob;
 
 
 @EActivity(R.layout.activity_main)
@@ -70,10 +79,9 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     private final static String TAG1 = "tag1";
     private final static String TAG2 = "tag2";
 
-    RestService restService = new RestService();
-
     private SwipeRefreshLayout mSwipeRefreshLayout;
-    List<GetListModel> load ;
+    public static RestService restService = new RestService();
+    public static List<GetListModel> getListModels;
     @ViewById
     TabHost tabHost;
     @ViewById(R.id.name_item_favorite)
@@ -83,33 +91,14 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     @ViewById
     Toolbar toolbar;
 
-
-    @Background
-    void load (){
-
-        try {
-                load = (restService.viewListInMainFragmenr(ConstantManager.SITE, ConstantManager.NAME, ConstantManager.NUM));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-        try {
-            loadMainEntity(load);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-    }
-
-
-    void delete(){
-        MainEntity.deleteAll();
-    }
     @AfterViews
-    void main (){
+    void main() {
 
         mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
         mSwipeRefreshLayout.setOnRefreshListener(this);
-
+        int idJob = BashSyncJob.schedulePeriodicJob();
+        for (int i = 1; i < idJob; i++)
+            BashSyncJob.cancelJob(i);
         tabHost.setup();
         setSupportActionBar(toolbar);
         // Вкладка главная
@@ -123,8 +112,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         tabSpec.setContent(R.id.tab2);
         tabHost.addTab(tabSpec);
         // по умолчанию показывать главную вкладку
-        delete();
-        load();
+
         MainFragment mainFragment = new MainFragment();
         replaceFragment(mainFragment, R.id.tab1);
         setTitle(getString(R.string.history_title));
@@ -132,7 +120,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         tabHost.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
             @Override
             public void onTabChanged(String s) {
-                switch (s){
+                switch (s) {
                     case TAG1:
                         MainFragment mainFragment = new MainFragment();
                         replaceFragment(mainFragment, R.id.tab1);
@@ -152,12 +140,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
                 android.R.color.holo_green_light,
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
-
-
-
     }
-
-
 
     private void replaceFragment(Fragment fragment, int id) {
         String backStackName = fragment.getClass().getName();
@@ -194,39 +177,54 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     }
 
 
-    public void loadMainEntity(final List<GetListModel> quotes) throws IOException {
-       // quotes = restService.viewListInMainFragmenr(ConstantManager.SITE, ConstantManager.NAME, ConstantManager.NUM);
-       // if (time != quoteEntity.getTimestp())
+    @Override
+    public void onRefresh() {
+        load();
+        mSwipeRefreshLayout.setRefreshing(false);
+    }
+
+    public static void loadMainEntity(final List<GetListModel> quotes) throws IOException {
         FlowManager.getDatabase(AppDatabase.class).executeTransaction(new ITransaction() {
 
             @Override
             public void execute(DatabaseWrapper databaseWrapper) {
                 MainEntity quoteEntity = new MainEntity();
-                for (GetListModel quote: quotes) {
-                    quoteEntity.setId(quote.getLink());
-                    quoteEntity.setList(quote.getElementPureHtml());
-                    if (SQLite.select().from(FavoriteEntity.class).where(FavoriteEntity_Table.id_list.eq(quote.getLink())).queryList().size() <= 0 )
-                    quoteEntity.setFavorite(false);
-                    else  quoteEntity.setFavorite(true);
-                    quoteEntity.save(databaseWrapper);
+                for (GetListModel quote : quotes) {
+                    if (SQLite.select().from(MainEntity.class).where(MainEntity_Table.id.eq(quote.getElementPureHtml())).queryList().size() > 0) {
+                        quoteEntity.setId(quote.getLink());
+                        quoteEntity.setList(quote.getElementPureHtml());
+                        if (SQLite.select().from(FavoriteEntity.class).where(FavoriteEntity_Table.id_list.eq(quote.getLink())).queryList().size() <= 0)
+                            quoteEntity.setFavorite(false);
+                        else quoteEntity.setFavorite(true);
+                        quoteEntity.setTime(getDate());
+                        quoteEntity.save(databaseWrapper);
+                    }
+
                 }
 
             }
         });
+    }
 
+    @Background
+    public void load() {
+        try {
+            getListModels = (restService.viewListInMainFragmenr(ConstantManager.SITE, ConstantManager.NAME, ConstantManager.NUM));
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        try {
+            loadMainEntity(getListModels);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
 
     }
 
-    @Override
-    public void onRefresh() {
-        new Handler().postDelayed(new Runnable() {
-            @Override
-            public void run() {
-                delete();
-                load();
-                mSwipeRefreshLayout.setRefreshing(false);
-            }
-        }, 1000);
-
+    public static String getDate() {
+        Calendar calendar = Calendar.getInstance();
+        String time = String.valueOf(calendar.get(Calendar.HOUR_OF_DAY));
+        time += ":" + String.valueOf(calendar.get(Calendar.MINUTE));
+        return time;
     }
 }

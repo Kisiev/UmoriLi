@@ -6,19 +6,18 @@ import com.google.gson.annotations.SerializedName;
 public class GetListModel {
 
     @SerializedName("site")
-
     private String site;
+
     @SerializedName("name")
-
     private String name;
+
     @SerializedName("desc")
-
     private String desc;
+
     @SerializedName("link")
-
     private String link;
-    @SerializedName("elementPureHtml")
 
+    @SerializedName("elementPureHtml")
     private String elementPureHtml;
 
 
