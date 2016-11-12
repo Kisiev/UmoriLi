@@ -81,13 +81,23 @@ public class MainEntity extends BaseModel{
         SQLite.update(MainEntity.class)
                 .set(MainEntity_Table.favorite.eq(b))
                 .where(MainEntity_Table.id.eq(mainId))
-                .queryList();
+                .execute();
+    }
+    public  static void updateFavoriteAll(boolean b){
+        SQLite.update(MainEntity.class)
+                .set(MainEntity_Table.favorite.eq(b))
+                .execute();
+    }
+    public static void delete(String id){
+        SQLite.delete(MainEntity.class)
+                .where(MainEntity_Table.id.eq(id))
+                .async()
+                .execute();
     }
 
 
-
     public static void deleteAll(){
-        SQLite.delete().from(MainEntity.class).async().execute();
+        SQLite.delete(MainEntity.class).async().execute();
     }
 
 

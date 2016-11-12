@@ -50,6 +50,7 @@ import list.umorili.android.com.umorili.ConstantManager;
 import list.umorili.android.com.umorili.R;
 import list.umorili.android.com.umorili.adapters.MainFragtentAdapter;
 import list.umorili.android.com.umorili.entity.MainEntity;
+import list.umorili.android.com.umorili.sync.BashSyncJob;
 
 import static android.content.Context.KEYGUARD_SERVICE;
 import static android.content.Context.MODE_PRIVATE;

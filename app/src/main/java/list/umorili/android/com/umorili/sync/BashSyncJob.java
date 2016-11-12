@@ -62,7 +62,7 @@ public class BashSyncJob extends Job {
     private String soundNotificationsKey;
     private String ledNotificationsKey;
     private static final boolean DEFAULT_VALUE = true;
-    private int countNotify = 0;
+    private static int countNotify = 1;
     public static final String TAG = "job_demo_tag";
     public static RestService restService = new RestService();
     public static List<GetListModel> getListModels;
@@ -70,17 +70,9 @@ public class BashSyncJob extends Job {
     @Override
     @NonNull
     protected Result onRunJob(Params params) {
-
-        new Handler().post(new Runnable() {
-            @Override
-            public void run() {
-                load();
-                if (countNotify >= 0)
-                    sendNotification(countNotify);
-                countNotify = 0;
-            }
-        });
-
+        load();
+        if (countNotify > 1) sendNotification(countNotify);
+        countNotify = 1;
         return Result.SUCCESS;
     }
 
@@ -98,7 +90,7 @@ public class BashSyncJob extends Job {
             public void execute(DatabaseWrapper databaseWrapper) {
                 MainEntity quoteEntity = new MainEntity();
                 for (GetListModel quote : quotes) {
-                    if (SQLite.select().from(MainEntity.class).where(MainEntity_Table.id.eq(quote.getElementPureHtml())).queryList().size() > 0) {
+                    if (SQLite.select().from(MainEntity.class).where(MainEntity_Table.id.eq(quote.getLink())).queryList().size() == 0) {
                         quoteEntity.setId(quote.getLink());
                         quoteEntity.setList(quote.getElementPureHtml());
                         if (SQLite.select().from(FavoriteEntity.class).where(FavoriteEntity_Table.id_list.eq(quote.getLink())).queryList().size() <= 0)
@@ -147,7 +139,7 @@ public class BashSyncJob extends Job {
         ledNotificationsKey = getContext().getString(R.string.pref_enable_led_notifications_key);
 
 
-        isNotificationsEnabled = mSharedPreferences.getBoolean(globalNotificationsKey, DEFAULT_VALUE);
+        isNotificationsEnabled = DEFAULT_VALUE;
         isVibrateEnabled = mSharedPreferences.getBoolean(vibrateNotificationsKey, DEFAULT_VALUE);
         isSoundEnabled = mSharedPreferences.getBoolean(soundNotificationsKey, DEFAULT_VALUE);
         isLedEnabled = mSharedPreferences.getBoolean(ledNotificationsKey, DEFAULT_VALUE);

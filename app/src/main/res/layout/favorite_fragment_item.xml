@@ -24,4 +24,10 @@
             android:id="@+id/name_item_favorite"/>
 
     </LinearLayout>
+    <View
+        android:background="@color/selected_color"
+        android:id="@+id/selected_overlay"
+        android:layout_height="match_parent"
+        android:layout_width="wrap_content"
+        android:visibility="invisible"/>
 </android.support.v7.widget.CardView>

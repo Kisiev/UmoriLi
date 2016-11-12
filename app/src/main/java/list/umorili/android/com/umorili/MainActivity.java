@@ -112,7 +112,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         tabSpec.setContent(R.id.tab2);
         tabHost.addTab(tabSpec);
         // по умолчанию показывать главную вкладку
-
+        load();
         MainFragment mainFragment = new MainFragment();
         replaceFragment(mainFragment, R.id.tab1);
         setTitle(getString(R.string.history_title));
@@ -159,28 +159,17 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
     }
 
-    @Override
-    public boolean onCreateOptionsMenu(Menu menu) {
-        getMenuInflater().inflate(R.menu.menu_activity, menu);
-        return true;
-    }
-
-
-    @Override
-    public boolean onOptionsItemSelected(MenuItem item) {
-        int id = item.getItemId();
-        if (id == R.id.action_delete_bt) {
-            FavoriteEntity.deleteAllFavorite();
-        }
-
-        return super.onOptionsItemSelected(item);
-    }
-
 
     @Override
     public void onRefresh() {
         load();
-        mSwipeRefreshLayout.setRefreshing(false);
+        new Handler().postDelayed(new Runnable() {
+            @Override
+            public void run() {
+                mSwipeRefreshLayout.setRefreshing(false);
+            }
+        }, 1000);
+
     }
 
     public static void loadMainEntity(final List<GetListModel> quotes) throws IOException {
@@ -190,17 +179,16 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
             public void execute(DatabaseWrapper databaseWrapper) {
                 MainEntity quoteEntity = new MainEntity();
                 for (GetListModel quote : quotes) {
-                    if (SQLite.select().from(MainEntity.class).where(MainEntity_Table.id.eq(quote.getElementPureHtml())).queryList().size() > 0) {
-                        quoteEntity.setId(quote.getLink());
-                        quoteEntity.setList(quote.getElementPureHtml());
-                        if (SQLite.select().from(FavoriteEntity.class).where(FavoriteEntity_Table.id_list.eq(quote.getLink())).queryList().size() <= 0)
-                            quoteEntity.setFavorite(false);
-                        else quoteEntity.setFavorite(true);
-                        quoteEntity.setTime(getDate());
-                        quoteEntity.save(databaseWrapper);
-                    }
 
+                    quoteEntity.setId(quote.getLink());
+                    quoteEntity.setList(quote.getElementPureHtml());
+                    if (SQLite.select().from(FavoriteEntity.class).where(FavoriteEntity_Table.id_list.eq(quote.getLink())).queryList().size() <= 0)
+                        quoteEntity.setFavorite(false);
+                    else quoteEntity.setFavorite(true);
+                    quoteEntity.setTime(getDate());
+                    quoteEntity.save(databaseWrapper);
                 }
+
 
             }
         });
@@ -226,5 +214,9 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         String time = String.valueOf(calendar.get(Calendar.HOUR_OF_DAY));
         time += ":" + String.valueOf(calendar.get(Calendar.MINUTE));
         return time;
+    }
+
+    void delete() {
+        MainEntity.deleteAll();
     }
 }

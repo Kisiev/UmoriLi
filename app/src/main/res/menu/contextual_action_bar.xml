@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+      xmlns:app="http://schemas.android.com/apk/res-auto">
+    <item
+        android:id="@+id/menu_remove"
+        android:title="@string/delete_AM"
+        android:icon="@mipmap/deleteforever"
+        app:showAsAction="ifRoom"
+        android:orderInCategory="1">
+
+    </item>
+
+    <item
+        android:id="@+id/menu_selected_all"
+        android:title="@string/select_all_AM"
+        android:icon="@mipmap/playlist_check"
+        app:showAsAction="ifRoom"
+        android:orderInCategory="1">
+
+    </item>
+
+</menu>
