@@ -1,5 +1,6 @@
 package list.umorili.android.com.umorili.fragments;
 
+import android.content.Context;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
@@ -15,11 +16,15 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
+import android.widget.RelativeLayout;
+import android.widget.TabWidget;
+import android.widget.Toast;
 
 import com.evernote.android.job.JobManager;
 import com.raizlabs.android.dbflow.config.FlowManager;
@@ -39,35 +44,30 @@ import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
 
-import java.io.IOException;
-import java.util.ArrayList;
 import java.util.List;
-import java.util.Observable;
-import java.util.Observer;
 
 import list.umorili.android.com.umorili.ConstantManager;
 
 import list.umorili.android.com.umorili.R;
 import list.umorili.android.com.umorili.adapters.MainFragtentAdapter;
 import list.umorili.android.com.umorili.entity.MainEntity;
-import list.umorili.android.com.umorili.sync.BashSyncJob;
-
-import static android.content.Context.KEYGUARD_SERVICE;
-import static android.content.Context.MODE_PRIVATE;
-
 
 @EFragment(R.layout.main_fragment)
-public class MainFragment extends Fragment{
+public class MainFragment extends Fragment {
 
     FlowContentObserver observer = new FlowContentObserver();
     RecyclerView recyclerView;
     @ViewById(R.id.checkbox)
     CheckBox checkBox;
+    @ViewById(android.R.id.tabs)
+    TabWidget tabWidget;
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.main_fragment, container, false);
+
         recyclerView = (RecyclerView) view.findViewById(R.id.main_fragment_recycler);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
 
@@ -109,17 +109,11 @@ public class MainFragment extends Fragment{
         });
     }
 
-    @Override
-    public void onResume() {
-        super.onResume();
-
-    }
 
     @Override
     public void onStart() {
         super.onStart();
         loadEntity();
     }
-
 
 }

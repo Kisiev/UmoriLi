@@ -2,9 +2,11 @@ package list.umorili.android.com.umorili.adapters;
 
 import android.content.Context;
 import android.support.v7.view.menu.MenuView;
+import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.CheckBox;
@@ -29,6 +31,8 @@ public class FavoriteFragmentAdapter extends SelectableAdapter<FavoriteFragmentA
     ClickListener clickListener;
     FavoriteEntity favoriteEntity;
     List<FavoriteEntity> favoriteEntityList;
+
+
     public FavoriteFragmentAdapter(List<FavoriteEntity> favoriteEntity, ClickListener clickListener, Context context) {
         this.favoriteEntityList = favoriteEntity;
         this.clickListener = clickListener;

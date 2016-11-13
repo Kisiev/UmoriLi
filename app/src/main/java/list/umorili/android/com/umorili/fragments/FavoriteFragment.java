@@ -21,6 +21,8 @@ import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Switch;
+import android.widget.TabHost;
+import android.widget.TabWidget;
 import android.widget.TextView;
 
 import com.raizlabs.android.dbflow.runtime.FlowContentObserver;
@@ -52,6 +54,7 @@ public class FavoriteFragment extends Fragment {
     private ActionMode actionMode;
     @ViewById(R.id.name_item_favorite)
     TextView name_item;
+
     FlowContentObserver observer = new FlowContentObserver();
     @Nullable
     @Override
@@ -165,13 +168,13 @@ public class FavoriteFragment extends Fragment {
                 case R.id.menu_remove:
                     adapter.removeItems(adapter.getSelectedItems());
                     mode.finish();
+                    MainEntity.deleteAll();
                     new Handler().postDelayed(new Runnable() {
                         @Override
                         public void run() {
                             loadEntity();
-                            MainEntity.deleteAll();
                         }
-                    },500);
+                    },1100);
 
                     return true;
                 case R.id.menu_selected_all:

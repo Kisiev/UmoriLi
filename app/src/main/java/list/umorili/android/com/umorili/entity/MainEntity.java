@@ -89,7 +89,7 @@ public class MainEntity extends BaseModel{
                 .execute();
     }
     public static void delete(String id){
-        SQLite.delete(MainEntity.class)
+        SQLite.delete().from(MainEntity.class)
                 .where(MainEntity_Table.id.eq(id))
                 .async()
                 .execute();

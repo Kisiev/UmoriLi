@@ -1,11 +1,11 @@
 <resources>
     <string name="app_name">UmoriLi</string>
-    <string name="main_tab">Главная</string>
+    <string name="main_tab">Главное</string>
     <string name="favorite_tab">Избранное</string>
     <string name="setting_menu">Настройки</string>
     <string name="history_title">Вся история</string>
     <string name="favorite">Избранное</string>
-    <string name="deleteall">Удалить все</string>
+    <string name="deleteall">Очистить список</string>
 
     <!-- common -->
     <string name="pref_enable_notifications_true">Включен</string>

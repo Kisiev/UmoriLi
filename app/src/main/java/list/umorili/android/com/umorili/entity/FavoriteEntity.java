@@ -70,8 +70,8 @@ public class FavoriteEntity extends BaseModel{
     }
 
     public static void delete(String id){
-        SQLite.delete(FavoriteEntity.class)
-                .where(FavoriteEntity_Table.id.eq(id))
+        SQLite.delete().from(FavoriteEntity.class)
+                .where(FavoriteEntity_Table.id_list.eq(id))
                 .async()
                 .execute();
     }
