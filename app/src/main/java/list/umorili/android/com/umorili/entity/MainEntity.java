@@ -29,17 +29,6 @@ public class MainEntity extends BaseModel{
     @Column(name = "favorite")
     private boolean favorite;
 
-    @Column(name = "time")
-    private String time;
-
-    public String getTime() {
-        return time;
-    }
-
-    public void setTime(String time) {
-        this.time = time;
-    }
-
     public String getId() {
         return id;
     }

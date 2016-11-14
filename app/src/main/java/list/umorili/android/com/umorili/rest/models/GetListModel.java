@@ -2,7 +2,9 @@ package list.umorili.android.com.umorili.rest.models;
 
 import com.google.gson.annotations.SerializedName;
 
+import org.androidannotations.annotations.EBean;
 
+@EBean
 public class GetListModel {
 
     @SerializedName("site")

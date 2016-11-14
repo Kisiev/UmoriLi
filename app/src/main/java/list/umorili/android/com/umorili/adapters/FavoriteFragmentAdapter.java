@@ -14,6 +14,8 @@ import android.widget.TextView;
 
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 
+import org.androidannotations.annotations.EBean;
+
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
@@ -24,7 +26,6 @@ import list.umorili.android.com.umorili.entity.FavoriteEntity;
 import list.umorili.android.com.umorili.entity.FavoriteEntity_Table;
 import list.umorili.android.com.umorili.entity.MainEntity;
 import list.umorili.android.com.umorili.entity.MainEntity_Table;
-
 
 public class FavoriteFragmentAdapter extends SelectableAdapter<FavoriteFragmentAdapter.FavoriteFragmentHolder>{
     private Context context;

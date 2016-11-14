@@ -168,13 +168,6 @@ public class FavoriteFragment extends Fragment {
                 case R.id.menu_remove:
                     adapter.removeItems(adapter.getSelectedItems());
                     mode.finish();
-                    MainEntity.deleteAll();
-                    new Handler().postDelayed(new Runnable() {
-                        @Override
-                        public void run() {
-                            loadEntity();
-                        }
-                    },1100);
 
                     return true;
                 case R.id.menu_selected_all:

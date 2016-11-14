@@ -15,7 +15,9 @@ import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper;
 import com.raizlabs.android.dbflow.structure.database.transaction.ITransaction;
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Background;
+import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.EBean;
 import org.androidannotations.annotations.ViewById;
 import java.io.IOException;
 import java.util.Calendar;
@@ -29,7 +31,6 @@ import list.umorili.android.com.umorili.fragments.FavoriteFragment;
 import list.umorili.android.com.umorili.fragments.MainFragment;
 import list.umorili.android.com.umorili.rest.RestService;
 import list.umorili.android.com.umorili.sync.BashSyncJob;
-
 
 @EActivity(R.layout.activity_main)
 public class MainActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
@@ -156,7 +157,6 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
                     if (SQLite.select().from(FavoriteEntity.class).where(FavoriteEntity_Table.id_list.eq(quote.getLink())).queryList().size() <= 0)
                         quoteEntity.setFavorite(false);
                     else quoteEntity.setFavorite(true);
-                    quoteEntity.setTime(getDate());
                     quoteEntity.save(databaseWrapper);
                 }
 
@@ -180,12 +180,6 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
     }
 
-    public static String getDate() {
-        Calendar calendar = Calendar.getInstance();
-        String time = String.valueOf(calendar.get(Calendar.HOUR_OF_DAY));
-        time += ":" + String.valueOf(calendar.get(Calendar.MINUTE));
-        return time;
-    }
 
 
     void delete() {

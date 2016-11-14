@@ -1,12 +1,13 @@
 package list.umorili.android.com.umorili.rest;
 
+import org.androidannotations.annotations.EBean;
+
 import java.util.List;
 
 import list.umorili.android.com.umorili.rest.models.GetListModel;
 import retrofit2.Call;
 import retrofit2.http.GET;
 import retrofit2.http.Query;
-
 
 public interface UmoriliApi {
     @GET("api/get")

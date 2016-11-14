@@ -90,17 +90,13 @@ public class BashSyncJob extends Job {
             public void execute(DatabaseWrapper databaseWrapper) {
                 MainEntity quoteEntity = new MainEntity();
                 for (GetListModel quote : quotes) {
-                    if (SQLite.select().from(MainEntity.class).where(MainEntity_Table.id.eq(quote.getLink())).queryList().size() == 0) {
                         quoteEntity.setId(quote.getLink());
                         quoteEntity.setList(quote.getElementPureHtml());
                         if (SQLite.select().from(FavoriteEntity.class).where(FavoriteEntity_Table.id_list.eq(quote.getLink())).queryList().size() <= 0)
                             quoteEntity.setFavorite(false);
                         else quoteEntity.setFavorite(true);
-                        quoteEntity.setTime(MainActivity.getDate());
                         quoteEntity.save(databaseWrapper);
                         countNotify++;
-                    }
-
                 }
 
             }
@@ -158,8 +154,8 @@ public class BashSyncJob extends Job {
                 .setLargeIcon(BitmapFactory.decodeResource(getContext().getResources(), R.mipmap.bash_icon))
                 .setContentTitle(getContext().getString(R.string.app_name))
                 .setContentText(getContext().getString(R.string.notification_message))
-                .setContentIntent(pendingIntent)
                 .setNumber(notifyCount)
+                .setContentIntent(pendingIntent)
                 .setAutoCancel(true);
 
         if (isLedEnabled) {
