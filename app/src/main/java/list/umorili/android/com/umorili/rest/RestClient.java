@@ -5,13 +5,13 @@ import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;
 import retrofit2.converter.gson.GsonConverterFactory;
 
-public class RestList  {
+public class RestClient {
     public final static String BASE_NAME = "http://www.umori.li/";
 
 
     private UmoriliApi umoriliApi;
 
-    public  RestList(){
+    public RestClient(){
         HttpLoggingInterceptor httpLoggingInterceptor = new HttpLoggingInterceptor();
         httpLoggingInterceptor.setLevel(HttpLoggingInterceptor.Level.BODY);
 

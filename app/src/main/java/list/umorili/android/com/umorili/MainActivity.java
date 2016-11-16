@@ -93,6 +93,15 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
     }
 
+    private static String replaceSimbolInText(String text){
+        String newText = text.replace("<br />", "");
+        newText = newText.replace("&lt;", "<");
+        newText = newText.replace("&gt;", ">");
+        newText = newText.replace("&quot;", "''");
+
+        return newText;
+    }
+
     @AfterViews
     public void main() {
 
@@ -131,6 +140,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
     @Override
     public void onRefresh() {
+        delete();
         load();
         new Handler().postDelayed(new Runnable() {
             @Override
@@ -149,9 +159,8 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
             public void execute(DatabaseWrapper databaseWrapper) {
                 MainEntity quoteEntity = new MainEntity();
                 for (GetListModel quote : quotes) {
-
                     quoteEntity.setId(quote.getLink());
-                    quoteEntity.setList(quote.getElementPureHtml());
+                    quoteEntity.setList(replaceSimbolInText(quote.getElementPureHtml()));
                     if (SQLite.select().from(FavoriteEntity.class).where(FavoriteEntity_Table.id_list.eq(quote.getLink())).queryList().size() <= 0)
                         quoteEntity.setFavorite(false);
                     else quoteEntity.setFavorite(true);

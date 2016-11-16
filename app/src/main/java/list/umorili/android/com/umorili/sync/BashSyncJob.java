@@ -82,6 +82,7 @@ public class BashSyncJob extends Job {
 
     private void load() {
         try {
+            delete();
             getListModels = (restService.viewListInMainFragmenr(ConstantManager.SITE, ConstantManager.NAME, ConstantManager.NUM));
 
         } catch (IOException e) {

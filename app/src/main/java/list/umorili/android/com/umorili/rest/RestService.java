@@ -7,16 +7,16 @@ import list.umorili.android.com.umorili.rest.models.GetListModel;
 
 public final class RestService {
 
-    private RestList restList;
+    private RestClient restClient;
     public RestService(){
-        restList = new RestList();
+        restClient = new RestClient();
     }
 
     public List<GetListModel> viewListInMainFragmenr (@NonNull String site,
                                                 @NonNull String name,
                                                 @NonNull int num) throws IOException{
 
-        return  restList.getUmoriliApi()
+        return  restClient.getUmoriliApi()
                 .getListModel(site, name, num)
                 .execute().body();
 
