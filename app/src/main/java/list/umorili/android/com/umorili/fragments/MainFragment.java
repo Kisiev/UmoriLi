@@ -16,6 +16,9 @@ import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
 import android.util.Log;
 import android.view.LayoutInflater;
+import android.view.Menu;
+import android.view.MenuInflater;
+import android.view.MenuItem;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,6 +26,7 @@ import android.widget.Button;
 import android.widget.CheckBox;
 import android.widget.CompoundButton;
 import android.widget.RelativeLayout;
+import android.widget.Switch;
 import android.widget.TabWidget;
 import android.widget.Toast;
 
@@ -64,6 +68,7 @@ public class MainFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
+        setHasOptionsMenu(true);
         View view = inflater.inflate(R.layout.main_fragment, container, false);
         recyclerView = (RecyclerView) view.findViewById(R.id.main_fragment_recycler);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -112,4 +117,18 @@ public class MainFragment extends Fragment {
         loadEntity();
     }
 
+    @Override
+    public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
+        inflater.inflate(R.menu.main_menu, menu);
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        switch (item.getItemId()){
+            case R.id.menu_setting:
+
+                return true;
+        }
+        return super.onOptionsItemSelected(item);
+    }
 }

@@ -93,7 +93,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
     }
 
-    private static String replaceSimbolInText(String text){
+    public static String replaceSimbolInText(String text){
         String newText = text.replace("<br />", "");
         newText = newText.replace("&lt;", "<");
         newText = newText.replace("&gt;", ">");

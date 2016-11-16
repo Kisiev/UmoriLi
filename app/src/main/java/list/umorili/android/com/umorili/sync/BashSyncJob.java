@@ -22,6 +22,7 @@ import java.io.IOException;
 import java.util.List;
 import java.util.concurrent.TimeUnit;
 import list.umorili.android.com.umorili.ConstantManager;
+import list.umorili.android.com.umorili.MainActivity;
 import list.umorili.android.com.umorili.MainActivity_;
 import list.umorili.android.com.umorili.R;
 import list.umorili.android.com.umorili.database.AppDatabase;
@@ -104,7 +105,7 @@ public class BashSyncJob extends Job {
                 for (GetListModel quote : quotes) {
                     if (SQLite.select().from(MainEntity.class).where(MainEntity_Table.id.eq(quote.getLink())).queryList().size() == 0) {
                         quoteEntity.setId(quote.getLink());
-                        quoteEntity.setList(quote.getElementPureHtml());
+                        quoteEntity.setList(MainActivity.replaceSimbolInText(quote.getElementPureHtml()));
                         if (SQLite.select().from(FavoriteEntity.class).where(FavoriteEntity_Table.id_list.eq(quote.getLink())).queryList().size() <= 0)
                             quoteEntity.setFavorite(false);
                         else quoteEntity.setFavorite(true);
