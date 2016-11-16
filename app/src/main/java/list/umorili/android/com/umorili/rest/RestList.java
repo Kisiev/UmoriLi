@@ -1,9 +1,5 @@
 package list.umorili.android.com.umorili.rest;
 
-import android.util.Log;
-
-import org.androidannotations.annotations.EBean;
-
 import okhttp3.OkHttpClient;
 import okhttp3.logging.HttpLoggingInterceptor;
 import retrofit2.Retrofit;

@@ -1,7 +1,5 @@
 package list.umorili.android.com.umorili.rest;
 
-import org.androidannotations.annotations.EBean;
-
 import java.util.List;
 
 import list.umorili.android.com.umorili.rest.models.GetListModel;

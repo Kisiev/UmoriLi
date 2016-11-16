@@ -1,67 +1,67 @@
 package list.umorili.android.com.umorili.fragments;
 
 import android.os.Bundle;
-import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
-import android.view.ContextMenu;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
 import android.view.MenuItem;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.Switch;
-import android.widget.TabHost;
-import android.widget.TabWidget;
 import android.widget.TextView;
 
 import com.raizlabs.android.dbflow.runtime.FlowContentObserver;
 import com.raizlabs.android.dbflow.structure.BaseModel;
 import com.raizlabs.android.dbflow.structure.Model;
 
-import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Background;
-import org.androidannotations.annotations.EBean;
 import org.androidannotations.annotations.EFragment;
 import org.androidannotations.annotations.ViewById;
-
 import java.util.List;
-import java.util.zip.Inflater;
-
 import list.umorili.android.com.umorili.ConstantManager;
 import list.umorili.android.com.umorili.R;
 import list.umorili.android.com.umorili.adapters.ClickListener;
 import list.umorili.android.com.umorili.adapters.FavoriteFragmentAdapter;
-import list.umorili.android.com.umorili.adapters.MainFragtentAdapter;
 import list.umorili.android.com.umorili.entity.FavoriteEntity;
 import list.umorili.android.com.umorili.entity.MainEntity;
 
 @EFragment(R.layout.favorite_fragment)
 public class FavoriteFragment extends Fragment {
-    RecyclerView recyclerView;
+
     private FavoriteFragmentAdapter adapter;
+    private RecyclerView recyclerView;
     private ActionModeCallback actionModeCallback = new ActionModeCallback();
     private ActionMode actionMode;
     @ViewById(R.id.name_item_favorite)
     TextView name_item;
 
     FlowContentObserver observer = new FlowContentObserver();
+
+    private void toggleSelection(int position) {
+        adapter.toggleSelection(position);
+        int count = adapter.getSelectedItemCount();
+        if (count == 0) {
+            actionMode.finish();
+        } else {
+            actionMode.setTitle(String.valueOf(count));
+            actionMode.invalidate();
+        }
+    }
+
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         View view = inflater.inflate(R.layout.favorite_fragment, container, false);
-        recyclerView = (RecyclerView) view.findViewById(R.id.favorite_fragment_recycler);
         setHasOptionsMenu(true);
+        recyclerView = (RecyclerView) view.findViewById(R.id.favorite_fragment_recycler);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
         observer.registerForContentChanges(getActivity(), FavoriteEntity.class);
         observer.addOnTableChangedListener(new FlowContentObserver.OnTableChangedListener() {
@@ -136,18 +136,6 @@ public class FavoriteFragment extends Fragment {
         });
 
     }
-
-    private void toggleSelection(int position) {
-        adapter.toggleSelection(position);
-        int count = adapter.getSelectedItemCount();
-        if (count == 0) {
-            actionMode.finish();
-        } else {
-            actionMode.setTitle(String.valueOf(count));
-            actionMode.invalidate();
-        }
-    }
-
 
     private class ActionModeCallback implements ActionMode.Callback {
 

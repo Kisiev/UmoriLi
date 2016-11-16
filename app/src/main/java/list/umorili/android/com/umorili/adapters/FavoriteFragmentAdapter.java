@@ -1,26 +1,15 @@
 package list.umorili.android.com.umorili.adapters;
 
 import android.content.Context;
-import android.support.v7.view.menu.MenuView;
-import android.support.v7.widget.PopupMenu;
 import android.support.v7.widget.RecyclerView;
-import android.util.Log;
 import android.view.LayoutInflater;
-import android.view.Menu;
 import android.view.View;
 import android.view.ViewGroup;
-import android.widget.CheckBox;
 import android.widget.TextView;
-
 import com.raizlabs.android.dbflow.sql.language.SQLite;
-
-import org.androidannotations.annotations.EBean;
-
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.zip.Inflater;
-
 import list.umorili.android.com.umorili.R;
 import list.umorili.android.com.umorili.entity.FavoriteEntity;
 import list.umorili.android.com.umorili.entity.FavoriteEntity_Table;
@@ -57,6 +46,22 @@ public class FavoriteFragmentAdapter extends SelectableAdapter<FavoriteFragmentA
     @Override
     public int getItemCount() {
         return favoriteEntityList.size();
+    }
+
+    private void removeItem(int position) {
+
+        removeCategory(position);
+        notifyItemRemoved(position);
+
+    }
+
+    private void removeCategory(int position) {
+        if (favoriteEntityList.get(position) != null) {
+            favoriteEntityList.get(position).delete();
+            SQLite.update(MainEntity.class).set(MainEntity_Table.favorite.eq(false)).where(MainEntity_Table.id.eq(favoriteEntityList.get(position).getId_list())).async().execute();
+            SQLite.delete(FavoriteEntity.class).where(FavoriteEntity_Table.id_list.eq(favoriteEntityList.get(position).getId_list())).async().execute();
+            favoriteEntityList.remove(position);
+        }
     }
 
     class FavoriteFragmentHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener{
@@ -107,23 +112,5 @@ public class FavoriteFragmentAdapter extends SelectableAdapter<FavoriteFragmentA
         }
     }
 
-
-    private void removeItem(int position) {
-
-        removeCategory(position);
-        notifyItemRemoved(position);
-
-    }
-
-    private void removeCategory(int position) {
-        if (favoriteEntityList.get(position) != null) {
-            favoriteEntityList.get(position).delete();
-           // MainEntity.updateFavorite(favoriteEntityList.get(position).getId_list(), false);
-            SQLite.update(MainEntity.class).set(MainEntity_Table.favorite.eq(false)).where(MainEntity_Table.id.eq(favoriteEntityList.get(position).getId_list())).async().execute();
-            SQLite.delete(FavoriteEntity.class).where(FavoriteEntity_Table.id_list.eq(favoriteEntityList.get(position).getId_list())).async().execute();
-            //FavoriteEntity.delete(favoriteEntityList.get(position).getId());
-            favoriteEntityList.remove(position);
-        }
-    }
 
 }

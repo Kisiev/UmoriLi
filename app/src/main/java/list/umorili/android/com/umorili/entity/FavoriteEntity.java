@@ -1,17 +1,11 @@
 package list.umorili.android.com.umorili.entity;
 
-import android.database.Cursor;
-import android.util.Log;
-
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.ConflictAction;
 import com.raizlabs.android.dbflow.annotation.PrimaryKey;
 import com.raizlabs.android.dbflow.annotation.Table;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 import com.raizlabs.android.dbflow.structure.BaseModel;
-
-import org.androidannotations.annotations.EBean;
-
 import java.util.List;
 
 import list.umorili.android.com.umorili.database.AppDatabase;

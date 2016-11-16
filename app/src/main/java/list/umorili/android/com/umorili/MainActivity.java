@@ -1,4 +1,5 @@
 package list.umorili.android.com.umorili;
+
 import android.os.Handler;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
@@ -15,12 +16,9 @@ import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper;
 import com.raizlabs.android.dbflow.structure.database.transaction.ITransaction;
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Background;
-import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EActivity;
-import org.androidannotations.annotations.EBean;
 import org.androidannotations.annotations.ViewById;
 import java.io.IOException;
-import java.util.Calendar;
 import java.util.List;
 import list.umorili.android.com.umorili.database.AppDatabase;
 import list.umorili.android.com.umorili.entity.FavoriteEntity;
@@ -51,8 +49,52 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     @ViewById
     Toolbar toolbar;
 
+    private void initSwipeRefreshLayout() {
+        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
+        mSwipeRefreshLayout.setOnRefreshListener(this);
+        mSwipeRefreshLayout.setColorSchemeResources(android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
+
+    }
+
+    private void clearJobSync() {
+        int idJob = BashSyncJob.schedulePeriodicJob();
+        for (int i = 1; i < idJob; i++)
+            BashSyncJob.cancelJob(i);
+    }
+
+    private void initTab(String tag, String tabHeader, int tab) {
+
+
+        TabHost.TabSpec tabSpec = tabHost.newTabSpec(tag);
+        tabSpec.setIndicator(tabHeader);
+        tabSpec.setContent(tab);
+        tabHost.addTab(tabSpec);
+
+    }
+
+
+    private void replaceFragment(Fragment fragment, int id) {
+        String backStackName = fragment.getClass().getName();
+
+        FragmentManager manager = getSupportFragmentManager();
+        boolean fragmentPopped = manager.popBackStackImmediate(backStackName, 0);
+
+        if (!fragmentPopped && manager.findFragmentByTag(backStackName) == null) {
+
+            FragmentTransaction ft = manager.beginTransaction();
+            ft.replace(id, fragment, backStackName);
+            ft.addToBackStack(backStackName);
+            ft.commit();
+        }
+
+
+    }
+
     @AfterViews
-    void main() {
+    public void main() {
 
         initSwipeRefreshLayout();
         clearJobSync();
@@ -86,50 +128,6 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
 
     }
-
-    private void initSwipeRefreshLayout() {
-        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
-        mSwipeRefreshLayout.setOnRefreshListener(this);
-        mSwipeRefreshLayout.setColorSchemeResources(android.R.color.holo_blue_bright,
-                android.R.color.holo_green_light,
-                android.R.color.holo_orange_light,
-                android.R.color.holo_red_light);
-
-    }
-
-    private void clearJobSync() {
-        int idJob = BashSyncJob.schedulePeriodicJob();
-        for (int i = 1; i < idJob; i++)
-            BashSyncJob.cancelJob(i);
-    }
-
-    private void initTab(String tag, String tabHeader, int tab) {
-
-        TabHost.TabSpec tabSpec = tabHost.newTabSpec(tag);
-        tabSpec.setIndicator(tabHeader);
-        tabSpec.setContent(tab);
-        tabHost.addTab(tabSpec);
-
-    }
-
-
-    private void replaceFragment(Fragment fragment, int id) {
-        String backStackName = fragment.getClass().getName();
-
-        FragmentManager manager = getSupportFragmentManager();
-        boolean fragmentPopped = manager.popBackStackImmediate(backStackName, 0);
-
-        if (!fragmentPopped && manager.findFragmentByTag(backStackName) == null) {
-
-            FragmentTransaction ft = manager.beginTransaction();
-            ft.replace(id, fragment, backStackName);
-            ft.addToBackStack(backStackName);
-            ft.commit();
-        }
-
-
-    }
-
 
     @Override
     public void onRefresh() {
@@ -166,7 +164,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     }
 
     @Background
-    public void load() {
+    void load() {
         try {
             getListModels = (restService.viewListInMainFragmenr(ConstantManager.SITE, ConstantManager.NAME, ConstantManager.NUM));
         } catch (IOException e) {
@@ -177,12 +175,9 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         } catch (IOException e) {
             e.printStackTrace();
         }
-
     }
 
-
-
-    void delete() {
+    public void delete() {
         MainEntity.deleteAll();
     }
 }

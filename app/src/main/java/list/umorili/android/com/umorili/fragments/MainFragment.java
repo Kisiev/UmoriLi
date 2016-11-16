@@ -56,21 +56,17 @@ import list.umorili.android.com.umorili.entity.MainEntity;
 public class MainFragment extends Fragment {
 
     FlowContentObserver observer = new FlowContentObserver();
-    RecyclerView recyclerView;
     @ViewById(R.id.checkbox)
     CheckBox checkBox;
-    @ViewById(android.R.id.tabs)
-    TabWidget tabWidget;
+    RecyclerView recyclerView;
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
 
         View view = inflater.inflate(R.layout.main_fragment, container, false);
-
         recyclerView = (RecyclerView) view.findViewById(R.id.main_fragment_recycler);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-
         observer.registerForContentChanges(getActivity(), MainEntity.class);
         observer.addOnTableChangedListener(new FlowContentObserver.OnTableChangedListener() {
             @Override
