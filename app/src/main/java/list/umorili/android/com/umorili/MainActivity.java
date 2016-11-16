@@ -1,9 +1,19 @@
 package list.umorili.android.com.umorili;
 
+import android.app.NotificationManager;
+import android.app.PendingIntent;
+import android.content.Context;
+import android.content.Intent;
+import android.content.SharedPreferences;
+import android.graphics.BitmapFactory;
+import android.graphics.Color;
 import android.os.Handler;
+import android.preference.PreferenceManager;
+import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.app.NotificationCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
@@ -39,7 +49,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     private SwipeRefreshLayout mSwipeRefreshLayout;
     public static RestService restService = new RestService();
     public static List<GetListModel> getListModels;
-
+    
     @ViewById
     TabHost tabHost;
     @ViewById(R.id.name_item_favorite)
@@ -135,7 +145,6 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
             }
         });
 
-
     }
 
     @Override
@@ -151,6 +160,10 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
     }
 
+    @Override
+    public void onBackPressed() {
+        finish();
+    }
 
     public static void loadMainEntity(final List<GetListModel> quotes) throws IOException {
         FlowManager.getDatabase(AppDatabase.class).executeTransaction(new ITransaction() {
@@ -189,4 +202,5 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     public void delete() {
         MainEntity.deleteAll();
     }
+
 }

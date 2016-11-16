@@ -1,6 +1,7 @@
 package list.umorili.android.com.umorili.fragments;
 
 import android.content.Context;
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.os.Bundle;
 import android.os.Handler;
@@ -53,6 +54,8 @@ import java.util.List;
 import list.umorili.android.com.umorili.ConstantManager;
 
 import list.umorili.android.com.umorili.R;
+import list.umorili.android.com.umorili.SettingActivity;
+import list.umorili.android.com.umorili.SettingActivity_;
 import list.umorili.android.com.umorili.adapters.MainFragtentAdapter;
 import list.umorili.android.com.umorili.entity.MainEntity;
 
@@ -126,7 +129,8 @@ public class MainFragment extends Fragment {
     public boolean onOptionsItemSelected(MenuItem item) {
         switch (item.getItemId()){
             case R.id.menu_setting:
-
+                Intent intent = new Intent(getActivity(), SettingActivity_.class);
+                startActivity(intent);
                 return true;
         }
         return super.onOptionsItemSelected(item);
