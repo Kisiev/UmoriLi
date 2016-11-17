@@ -134,7 +134,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         initTab(TAG1, getString(R.string.main_tab), R.id.tab1);
         initTab(TAG2, getString(R.string.favorite_tab), R.id.tab2);
         service_setting = sharedPreferences.getString(getString(R.string.pref_setting_service), "abyss");
-        loadMainEntity();
+
 
         MainFragment mainFragment = new MainFragment();
         replaceFragment(mainFragment, R.id.tab1);
@@ -167,6 +167,13 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         delete();
         loadMainEntity();
 
+    }
+
+    @Override
+    protected void onStart() {
+        super.onStart();
+        delete();
+        loadMainEntity();
     }
 
     @UiThread
