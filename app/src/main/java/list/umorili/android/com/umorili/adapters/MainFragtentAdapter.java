@@ -26,13 +26,16 @@ public class MainFragtentAdapter extends RecyclerView.Adapter<MainFragtentAdapte
             @Override
             public void onCheckedChanged(CompoundButton compoundButton, boolean b) {
                 if (holder.checkBox.isChecked()) {
-                    if(SQLite.select().from(FavoriteEntity.class).where(FavoriteEntity_Table.id_list.eq(mainEntityList.get(position).getId())).queryList().isEmpty())
+                    if((SQLite.select().from(FavoriteEntity.class).where(FavoriteEntity_Table.id_list.eq(mainEntityList.get(position).getId())).queryList().isEmpty())
+                    &&(SQLite.select().from(FavoriteEntity.class).where(FavoriteEntity_Table.favorite_list.eq(mainEntityList.get(position).getList())).queryList().isEmpty()))
                         FavoriteEntity.insert(mainEntityList.get(position).getId(), mainEntityList.get(position).getList());
                     MainEntity.updateFavorite(mainEntityList.get(position).getId(), true);
 
                 } else {
                     FavoriteEntity.delete(mainEntityList.get(position).getId());
+                    FavoriteEntity.deleteOnAbyss(mainEntityList.get(position).getList());
                     MainEntity.delete(mainEntityList.get(position).getId());
+                    MainEntity.deleteOnContent(mainEntityList.get(position).getList());
                 }
             }
         });

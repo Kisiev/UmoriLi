@@ -77,6 +77,12 @@ public class MainEntity extends BaseModel{
                 .async()
                 .execute();
     }
+    public static void deleteOnContent(String news){
+        SQLite.delete().from(MainEntity.class)
+                .where(MainEntity_Table.content.eq(news))
+                .async()
+                .execute();
+    }
 
 
     public static void deleteAll(){

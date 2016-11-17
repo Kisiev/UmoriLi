@@ -6,6 +6,11 @@
     <string name="history_title">Вся история</string>
     <string name="favorite">Избранное</string>
     <string name="deleteall">Очистить список</string>
+    <string name="news">bash</string>
+    <string name="bezdna">abyss</string>
+    <string name="news_title_array">Новые</string>
+    <string name="abyss_title_array">Бездна</string>
+    <string name="pref_list_switch">Переключатель между вкладками Бездна и Новое</string>
 
     <string name="pref_notification_section">Настройки уведомлений</string>
     <!-- common -->
@@ -34,6 +39,11 @@
     <!-- Foreground option -->
     <string name="pref_enable_foreground_notifications_key" translatable="false">enable_foreground_notifications</string>
     <string name="pref_enable_foreground_notifications_label">Foreground</string>
+
+    <string name="pref_setting_service">setting_service</string>
+    <string name="pref_setting_service_title">Изменить вкладку</string>
+    <string name="pref_setting_service_dialog_title">Изменить вкладку</string>
+
 
     <!-- String for notification bar-->
     <string name="notification_message">Список новостей обновлен</string>

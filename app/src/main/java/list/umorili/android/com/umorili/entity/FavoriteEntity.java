@@ -59,6 +59,7 @@ public class FavoriteEntity extends BaseModel{
 
         return SQLite.select()
                 .from(FavoriteEntity.class)
+                .orderBy(FavoriteEntity_Table.id, false)
                 .queryList();
 
     }
@@ -66,6 +67,12 @@ public class FavoriteEntity extends BaseModel{
     public static void delete(String id){
         SQLite.delete().from(FavoriteEntity.class)
                 .where(FavoriteEntity_Table.id_list.eq(id))
+                .async()
+                .execute();
+    }
+    public static void deleteOnAbyss(String abyss){
+        SQLite.delete().from(FavoriteEntity.class)
+                .where(FavoriteEntity_Table.favorite_list.eq(abyss))
                 .async()
                 .execute();
     }

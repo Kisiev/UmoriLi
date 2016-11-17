@@ -58,8 +58,8 @@ public class FavoriteFragmentAdapter extends SelectableAdapter<FavoriteFragmentA
     private void removeCategory(int position) {
         if (favoriteEntityList.get(position) != null) {
             favoriteEntityList.get(position).delete();
-            SQLite.update(MainEntity.class).set(MainEntity_Table.favorite.eq(false)).where(MainEntity_Table.id.eq(favoriteEntityList.get(position).getId_list())).async().execute();
-            SQLite.delete(FavoriteEntity.class).where(FavoriteEntity_Table.id_list.eq(favoriteEntityList.get(position).getId_list())).async().execute();
+            SQLite.update(MainEntity.class).set(MainEntity_Table.favorite.eq(false)).where(MainEntity_Table.content.eq(favoriteEntityList.get(position).getList())).async().execute();
+            SQLite.delete(FavoriteEntity.class).where(FavoriteEntity_Table.favorite_list.eq(favoriteEntityList.get(position).getList())).async().execute();
             favoriteEntityList.remove(position);
         }
     }
@@ -104,8 +104,8 @@ public class FavoriteFragmentAdapter extends SelectableAdapter<FavoriteFragmentA
                 for (int i = 0; i < positions.size();i ++){
                     removeItem(positions.get(0));
                     positions.remove(0);
-                    SQLite.update(MainEntity.class).set(MainEntity_Table.favorite.eq(false)).where(MainEntity_Table.id.eq(favoriteEntityList.get(positions.get(0)).getId_list())).async().execute();
-                    SQLite.delete(FavoriteEntity.class).where(FavoriteEntity_Table.id_list.eq(favoriteEntityList.get(positions.get(0)).getId_list())).async().execute();
+                    SQLite.update(MainEntity.class).set(MainEntity_Table.favorite.eq(false)).where(MainEntity_Table.content.eq(favoriteEntityList.get(positions.get(0)).getList())).async().execute();
+                    SQLite.delete(FavoriteEntity.class).where(FavoriteEntity_Table.favorite_list.eq(favoriteEntityList.get(positions.get(0)).getList())).async().execute();
                 }
 
             }

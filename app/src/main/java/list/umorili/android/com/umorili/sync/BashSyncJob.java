@@ -60,8 +60,12 @@ public class BashSyncJob extends Job {
     @Override
     @NonNull
     protected Result onRunJob(Params params) {
-        load();
-        if (countNotify > 1) sendNotification();
+        try {
+            loadMainEntity();
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+        if (countNotify >= 1) sendNotification();
         countNotify = 1;
         return Result.SUCCESS;
     }
@@ -80,24 +84,13 @@ public class BashSyncJob extends Job {
         isLedEnabled = mSharedPreferences.getBoolean(ledNotificationsKey, DEFAULT_VALUE);
     }
 
-
-    private void load() {
+    private void loadMainEntity() throws IOException {
         try {
-            delete();
             getListModels = (restService.viewListInMainFragmenr(ConstantManager.SITE, ConstantManager.NAME, ConstantManager.NUM));
-
         } catch (IOException e) {
             e.printStackTrace();
         }
-        try {
-            loadMainEntity(getListModels);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
-
-    }
-
-    private void loadMainEntity(final List<GetListModel> quotes) throws IOException {
+        final List<GetListModel> quotes = getListModels;
         FlowManager.getDatabase(AppDatabase.class).executeTransaction(new ITransaction() {
             @Override
             public void execute(DatabaseWrapper databaseWrapper) {
@@ -110,6 +103,7 @@ public class BashSyncJob extends Job {
                             quoteEntity.setFavorite(false);
                         else quoteEntity.setFavorite(true);
                         quoteEntity.save(databaseWrapper);
+                        countNotify ++;
                     }
                 }
 

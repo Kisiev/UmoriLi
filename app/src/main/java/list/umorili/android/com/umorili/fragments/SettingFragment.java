@@ -14,6 +14,8 @@ import android.view.ViewGroup;
 
 import org.androidannotations.annotations.EFragment;
 
+import java.util.List;
+
 import list.umorili.android.com.umorili.R;
 
 @EFragment
@@ -50,8 +52,7 @@ public class SettingFragment extends PreferenceFragmentCompat
 
     @Override
     public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-        Log.d(LOG_TAG, "Value with key '" + key + "' was changed to " +
-                sharedPreferences.getBoolean(key, DEFAULT_VALUE));
+
         boolean isNotify = sharedPreferences.getBoolean(getString(R.string.pref_enable_notifications_key), DEFAULT_VALUE);
         boolean isSound = sharedPreferences.getBoolean(getString(R.string.pref_enable_sound_notifications_key), DEFAULT_VALUE);
         boolean isVibrate = sharedPreferences.getBoolean(getString(R.string.pref_enable_vibrate_notifications_key), DEFAULT_VALUE);
