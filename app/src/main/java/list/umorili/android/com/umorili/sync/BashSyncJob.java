@@ -65,7 +65,7 @@ public class BashSyncJob extends Job {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        if (countNotify >= 1) sendNotification();
+        if (countNotify > 1) sendNotification();
         countNotify = 1;
         return Result.SUCCESS;
     }
@@ -78,7 +78,7 @@ public class BashSyncJob extends Job {
         soundNotificationsKey = getContext().getString(R.string.pref_enable_sound_notifications_key);
         ledNotificationsKey = getContext().getString(R.string.pref_enable_led_notifications_key);
 
-        isNotificationsEnabled = DEFAULT_VALUE;
+        isNotificationsEnabled = mSharedPreferences.getBoolean(globalNotificationsKey, DEFAULT_VALUE);
         isVibrateEnabled = mSharedPreferences.getBoolean(vibrateNotificationsKey, DEFAULT_VALUE);
         isSoundEnabled = mSharedPreferences.getBoolean(soundNotificationsKey, DEFAULT_VALUE);
         isLedEnabled = mSharedPreferences.getBoolean(ledNotificationsKey, DEFAULT_VALUE);
