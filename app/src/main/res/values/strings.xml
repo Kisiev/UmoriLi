@@ -49,4 +49,7 @@
     <string name="notification_message">Список новостей обновлен</string>
     <string name="delete_AM">Удалить</string>
     <string name="select_all_AM">Выбрать все</string>
+    <string name="clear_favorite">Очистить избранное?</string>
+    <string name="cancelBT">Нет</string>
+    <string name="okBT">Да</string>
 </resources>

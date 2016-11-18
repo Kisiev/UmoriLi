@@ -1,19 +1,10 @@
 package list.umorili.android.com.umorili;
 
-import android.app.NotificationManager;
-import android.app.PendingIntent;
-import android.content.Context;
-import android.content.Intent;
 import android.content.SharedPreferences;
-import android.graphics.BitmapFactory;
-import android.graphics.Color;
-import android.os.Handler;
 import android.preference.PreferenceManager;
-import android.provider.Settings;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
-import android.support.v4.app.NotificationCompat;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
@@ -59,10 +50,6 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     public static String service_setting;
     @ViewById
     TabHost tabHost;
-    @ViewById(R.id.name_item_favorite)
-    TextView name_item;
-    @ViewById(R.id.main_fragment_recycler)
-    RecyclerView recyclerView;
     @ViewById
     Toolbar toolbar;
 
@@ -110,6 +97,13 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
     }
 
+    private void initStetho(){
+        Stetho.initialize(Stetho.newInitializerBuilder(this)
+                .enableWebKitInspector(Stetho.defaultInspectorModulesProvider(this))
+                .enableDumpapp(Stetho.defaultDumperPluginsProvider(this))
+                .build());
+    }
+
     public static String replaceSimbolInText(String text) {
         String newText = text.replace("<br />", "");
         newText = newText.replace("&lt;", "<");
@@ -123,18 +117,14 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     public void main() {
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
-        Stetho.initialize(Stetho.newInitializerBuilder(this)
-                .enableWebKitInspector(Stetho.defaultInspectorModulesProvider(this))
-                .enableDumpapp(Stetho.defaultDumperPluginsProvider(this))
-                .build());
+        initStetho();
         initSwipeRefreshLayout();
         clearJobSync();
         setSupportActionBar(toolbar);
         tabHost.setup();
         initTab(TAG1, getString(R.string.main_tab), R.id.tab1);
         initTab(TAG2, getString(R.string.favorite_tab), R.id.tab2);
-        service_setting = sharedPreferences.getString(getString(R.string.pref_setting_service), "abyss");
-
+        service_setting = sharedPreferences.getString(getString(R.string.pref_setting_service), getString(R.string.news));
 
         MainFragment mainFragment = new MainFragment();
         replaceFragment(mainFragment, R.id.tab1);
@@ -163,7 +153,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
 
     @Override
     public void onRefresh() {
-        service_setting = sharedPreferences.getString(getString(R.string.pref_setting_service), "abyss");
+        service_setting = sharedPreferences.getString(getString(R.string.pref_setting_service), getString(R.string.news));
         delete();
         loadMainEntity();
 
