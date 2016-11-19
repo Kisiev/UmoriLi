@@ -19,4 +19,12 @@
 
     </item>
 
+    <item android:id="@+id/menu_item_share"
+          app:showAsAction="ifRoom"
+          android:icon="@mipmap/copy"
+          android:title="@string/share">
+    </item>
+
+
+
 </menu>

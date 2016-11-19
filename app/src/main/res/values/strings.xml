@@ -52,4 +52,7 @@
     <string name="clear_favorite">Очистить избранное?</string>
     <string name="cancelBT">Нет</string>
     <string name="okBT">Да</string>
+    <string name="share">Поделиться</string>
+    <string name="error_copy">Нельзя скопировать больше одной записи</string>
+    <string name="copy">copy</string>
 </resources>

@@ -111,6 +111,20 @@ public class FavoriteFragmentAdapter extends SelectableAdapter<FavoriteFragmentA
             }
         }
     }
+    public String selectItem(List<Integer> positions) {
+        Collections.sort(positions, new Comparator<Integer>() {
+            @Override
+            public int compare(Integer lhs, Integer rhs) {
+                return rhs - lhs;
+            }
+        });
+        while (!positions.isEmpty()) {
+            if (positions.size() == 1) {
+                return String.valueOf((favoriteEntityList.get(positions.get(0)).getList()));
+            }
+        }
+        return null;
+    }
 
 
 }

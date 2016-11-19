@@ -1,6 +1,10 @@
 package list.umorili.android.com.umorili.fragments;
 
 import android.app.Dialog;
+import android.content.ClipData;
+import android.content.ClipboardManager;
+import android.content.Context;
+import android.content.Intent;
 import android.os.Bundle;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -11,6 +15,7 @@ import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.LinearLayoutManager;
 import android.support.v7.widget.RecyclerView;
+import android.support.v7.widget.ShareActionProvider;
 import android.text.Editable;
 import android.text.TextUtils;
 import android.view.LayoutInflater;
@@ -22,6 +27,7 @@ import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.EditText;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.raizlabs.android.dbflow.runtime.FlowContentObserver;
 import com.raizlabs.android.dbflow.structure.BaseModel;
@@ -182,6 +188,7 @@ public class FavoriteFragment extends Fragment {
 
         @Override
         public boolean onActionItemClicked(ActionMode mode, MenuItem item) {
+
             switch (item.getItemId()) {
                 case R.id.menu_remove:
                     adapter.removeItems(adapter.getSelectedItems());
@@ -193,6 +200,13 @@ public class FavoriteFragment extends Fragment {
                     for (int i = 0; i < adapter.getItemCount(); i++) {
                         adapter.toggleSelection(i);
                     }
+                    return true;
+                case R.id.menu_item_share:
+                    if (adapter.getSelectedItems().size() == 1) {
+                        ClipboardManager clipboard = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
+                        ClipData clip = ClipData.newPlainText(getString(R.string.copy), adapter.selectItem(adapter.getSelectedItems()));
+                        clipboard.setPrimaryClip(clip);
+                    } else Toast.makeText(getActivity(), R.string.error_copy, Toast.LENGTH_SHORT).show();
                     return true;
                 default:
                     return false;
