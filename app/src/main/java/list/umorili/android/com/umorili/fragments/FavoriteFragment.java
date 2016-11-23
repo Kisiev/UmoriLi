@@ -6,11 +6,13 @@ import android.content.ClipboardManager;
 import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
+import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
+import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.view.ActionMode;
 import android.support.v7.widget.LinearLayoutManager;
@@ -18,6 +20,7 @@ import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.ShareActionProvider;
 import android.text.Editable;
 import android.text.TextUtils;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.Menu;
 import android.view.MenuInflater;
@@ -35,6 +38,7 @@ import com.raizlabs.android.dbflow.structure.Model;
 
 import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.EFragment;
+import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
 
 import java.util.List;
@@ -43,16 +47,20 @@ import list.umorili.android.com.umorili.ConstantManager;
 import list.umorili.android.com.umorili.R;
 import list.umorili.android.com.umorili.adapters.ClickListener;
 import list.umorili.android.com.umorili.adapters.FavoriteFragmentAdapter;
+import list.umorili.android.com.umorili.adapters.MainFragtentAdapter;
 import list.umorili.android.com.umorili.entity.FavoriteEntity;
 import list.umorili.android.com.umorili.entity.MainEntity;
 
 @EFragment(R.layout.favorite_fragment)
 public class FavoriteFragment extends Fragment {
 
-    private FavoriteFragmentAdapter adapter;
-    private RecyclerView recyclerView;
+    public static FavoriteFragmentAdapter adapter;
+    public static RecyclerView recyclerView;
+    public static Context context;
+    SwipeRefreshLayout mSwipeRefreshLayout;
+    public static AppCompatActivity activity;
     private ActionModeCallback actionModeCallback = new ActionModeCallback();
-    private ActionMode actionMode;
+    public static ActionMode actionMode;
     @ViewById(R.id.name_item_favorite)
     TextView name_item;
 
@@ -79,6 +87,7 @@ public class FavoriteFragment extends Fragment {
             public void onClick(View view) {
                 FavoriteEntity.deleteAllFavorite();
                 MainEntity.updateFavoriteAll(false);
+                MainFragment.recyclerView.setAdapter(new MainFragtentAdapter(MainEntity.listUmor()));
                 loadEntity();
                 dialog.dismiss();
 
@@ -101,6 +110,18 @@ public class FavoriteFragment extends Fragment {
         setHasOptionsMenu(true);
         recyclerView = (RecyclerView) view.findViewById(R.id.favorite_fragment_recycler);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
+
+        mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container_favorite);
+        mSwipeRefreshLayout.setColorSchemeResources(android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                loadEntity();
+            }
+        });
         observer.registerForContentChanges(getActivity(), FavoriteEntity.class);
         observer.addOnTableChangedListener(new FlowContentObserver.OnTableChangedListener() {
             @Override
@@ -108,6 +129,7 @@ public class FavoriteFragment extends Fragment {
                 loadEntity();
             }
         });
+        context = getActivity();
         return view;
     }
 
@@ -125,51 +147,56 @@ public class FavoriteFragment extends Fragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_activity, menu);
     }
-
-    @Background
     public void loadEntity() {
-        getLoaderManager().restartLoader(ConstantManager.ID_FRAGMENT, null, new LoaderManager.LoaderCallbacks<List<FavoriteEntity>>() {
+        new Handler().post(new Runnable() {
             @Override
-            public Loader<List<FavoriteEntity>> onCreateLoader(int id, Bundle args) {
-                final AsyncTaskLoader<List<FavoriteEntity>> loader = new AsyncTaskLoader<List<FavoriteEntity>>(getActivity()) {
+            public void run() {
+                getLoaderManager().restartLoader(ConstantManager.ID_FRAGMENT, null, new LoaderManager.LoaderCallbacks<List<FavoriteEntity>>() {
                     @Override
-                    public List<FavoriteEntity> loadInBackground() {
-                        return FavoriteEntity.selectedALL();
-                    }
-                };
-                loader.forceLoad();
-                return loader;
-            }
-
-            @Override
-            public void onLoadFinished(Loader<List<FavoriteEntity>> loader, List<FavoriteEntity> data) {
-                adapter = new FavoriteFragmentAdapter(data, new ClickListener() {
-                    @Override
-                    public void onItemSelected(int position) {
-                        if (actionMode != null) {
-                            toggleSelection(position);
-                        }
+                    public Loader<List<FavoriteEntity>> onCreateLoader(int id, Bundle args) {
+                        final AsyncTaskLoader<List<FavoriteEntity>> loader = new AsyncTaskLoader<List<FavoriteEntity>>(getActivity()) {
+                            @Override
+                            public List<FavoriteEntity> loadInBackground() {
+                                return FavoriteEntity.selectedALL();
+                            }
+                        };
+                        loader.forceLoad();
+                        return loader;
                     }
 
                     @Override
-                    public boolean onItemLongSelected(int position) {
-                        if (actionMode == null) {
-                            AppCompatActivity activity = (AppCompatActivity) getActivity();
-                            actionMode = activity.startSupportActionMode(actionModeCallback);
-                        }
-                        toggleSelection(position);
-                        return true;
+                    public void onLoadFinished(Loader<List<FavoriteEntity>> loader, List<FavoriteEntity> data) {
+                        adapter = new FavoriteFragmentAdapter(data, new ClickListener() {
+                            @Override
+                            public void onItemSelected(int position) {
+                                if (actionMode != null) {
+                                    toggleSelection(position);
+                                }
+                            }
+
+                            @Override
+                            public boolean onItemLongSelected(int position) {
+                                if (actionMode == null) {
+                                    activity = (AppCompatActivity) getActivity();
+                                    actionMode = activity.startSupportActionMode(actionModeCallback);
+                                }
+                                toggleSelection(position);
+                                return true;
+                            }
+                        }, getActivity());
+
+                        recyclerView.setAdapter(adapter);
+                        mSwipeRefreshLayout.setRefreshing(false);
+
                     }
-                }, getActivity());
 
-                recyclerView.setAdapter(adapter);
-
-            }
-
-            @Override
-            public void onLoaderReset(Loader<List<FavoriteEntity>> loader) {
+                    @Override
+                    public void onLoaderReset(Loader<List<FavoriteEntity>> loader) {
+                    }
+                });
             }
         });
+
 
     }
 
@@ -226,5 +253,6 @@ public class FavoriteFragment extends Fragment {
     public void onStart() {
         super.onStart();
         loadEntity();
+        Log.d("ONSTART FAVORITE", "OnStart");
     }
 }

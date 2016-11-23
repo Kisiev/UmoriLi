@@ -1,6 +1,8 @@
 package list.umorili.android.com.umorili.entity;
 
 import android.support.annotation.NonNull;
+import android.support.v4.app.LoaderManager;
+import android.util.Log;
 
 import com.raizlabs.android.dbflow.annotation.Column;
 import com.raizlabs.android.dbflow.annotation.ConflictAction;
@@ -63,7 +65,7 @@ public class MainEntity extends BaseModel{
     public  static void updateFavorite(@NonNull String mainId, boolean b){
         SQLite.update(MainEntity.class)
                 .set(MainEntity_Table.favorite.eq(b))
-                .where(MainEntity_Table.id.eq(mainId))
+                .where(MainEntity_Table.id.eq(mainId)).async()
                 .execute();
     }
     public  static void updateFavoriteAll(boolean b){
@@ -71,12 +73,7 @@ public class MainEntity extends BaseModel{
                 .set(MainEntity_Table.favorite.eq(b))
                 .execute();
     }
-    public static void delete(String id){
-        SQLite.delete().from(MainEntity.class)
-                .where(MainEntity_Table.id.eq(id))
-                .async()
-                .execute();
-    }
+
     public static void deleteOnContent(String news){
         SQLite.delete().from(MainEntity.class)
                 .where(MainEntity_Table.content.eq(news))

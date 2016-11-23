@@ -70,12 +70,7 @@ public class FavoriteEntity extends BaseModel{
                 .async()
                 .execute();
     }
-    public static void deleteOnAbyss(String abyss){
-        SQLite.delete().from(FavoriteEntity.class)
-                .where(FavoriteEntity_Table.favorite_list.eq(abyss))
-                .async()
-                .execute();
-    }
+
     public static void deleteAllFavorite(){
         SQLite.delete(FavoriteEntity.class)
                 .async()

@@ -53,6 +53,7 @@ import java.util.List;
 
 import list.umorili.android.com.umorili.ConstantManager;
 
+import list.umorili.android.com.umorili.MainActivity;
 import list.umorili.android.com.umorili.R;
 import list.umorili.android.com.umorili.SettingActivity;
 import list.umorili.android.com.umorili.SettingActivity_;
@@ -60,25 +61,39 @@ import list.umorili.android.com.umorili.adapters.MainFragtentAdapter;
 import list.umorili.android.com.umorili.entity.MainEntity;
 
 @EFragment(R.layout.main_fragment)
-public class MainFragment extends Fragment {
+public class MainFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
-    FlowContentObserver observer = new FlowContentObserver();
+    SwipeRefreshLayout mSwipeRefreshLayout;
+   // FlowContentObserver observer = new FlowContentObserver();
     @ViewById(R.id.checkbox)
     CheckBox checkBox;
-    RecyclerView recyclerView;
+    public static RecyclerView recyclerView;
+    public static Context context;
+
+    @Override
+    public void onCreate(@Nullable Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        Log.d("MainFragment", "onCreate");
+
+    }
 
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-
+        Log.d("ONSTART", "onCreateView");
         setHasOptionsMenu(true);
         View view = inflater.inflate(R.layout.main_fragment, container, false);
         recyclerView = (RecyclerView) view.findViewById(R.id.main_fragment_recycler);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
-        observer.registerForContentChanges(getActivity(), MainEntity.class);
-        observer.addOnTableChangedListener(new FlowContentObserver.OnTableChangedListener() {
+
+        mSwipeRefreshLayout = (SwipeRefreshLayout) view.findViewById(R.id.swipe_container);
+        mSwipeRefreshLayout.setColorSchemeResources(android.R.color.holo_blue_bright,
+                android.R.color.holo_green_light,
+                android.R.color.holo_orange_light,
+                android.R.color.holo_red_light);
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
-            public void onTableChanged(@Nullable Class<? extends Model> tableChanged, BaseModel.Action action) {
+            public void onRefresh() {
                 loadEntity();
             }
         });
@@ -105,6 +120,7 @@ public class MainFragment extends Fragment {
             @Override
             public void onLoadFinished (Loader < List < MainEntity >> loader, List < MainEntity > data){
                 recyclerView.setAdapter(new MainFragtentAdapter(data));
+                mSwipeRefreshLayout.setRefreshing(false);
             }
 
             @Override
@@ -117,7 +133,22 @@ public class MainFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
+        context = getActivity();
         loadEntity();
+        Log.d("ONSTART", "OnStart");
+    }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+       // MainActivity.observer.registerForContentChanges(getActivity(), MainEntity.class);
+        MainActivity.observer.addOnTableChangedListener(new FlowContentObserver.OnTableChangedListener() {
+            @Override
+            public void onTableChanged(@Nullable Class<? extends Model> tableChanged, BaseModel.Action action) {
+                Log.d("OBERV", "DAAAA");
+                loadEntity();
+            }
+        });
     }
 
     @Override
@@ -134,5 +165,10 @@ public class MainFragment extends Fragment {
                 return true;
         }
         return super.onOptionsItemSelected(item);
+    }
+
+    @Override
+    public void onRefresh() {
+        loadEntity();
     }
 }

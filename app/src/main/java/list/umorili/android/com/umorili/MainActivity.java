@@ -2,19 +2,25 @@ package list.umorili.android.com.umorili;
 
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.FragmentManager;
 import android.support.v4.app.FragmentTransaction;
+import android.support.v4.view.ViewPager;
 import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.Log;
 import android.widget.TabHost;
 import android.widget.TextView;
 
 import com.facebook.stetho.Stetho;
 import com.raizlabs.android.dbflow.config.FlowManager;
+import com.raizlabs.android.dbflow.runtime.FlowContentObserver;
 import com.raizlabs.android.dbflow.sql.language.SQLite;
+import com.raizlabs.android.dbflow.structure.BaseModel;
+import com.raizlabs.android.dbflow.structure.Model;
 import com.raizlabs.android.dbflow.structure.database.DatabaseWrapper;
 import com.raizlabs.android.dbflow.structure.database.transaction.ITransaction;
 
@@ -25,11 +31,15 @@ import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
+import list.umorili.android.com.umorili.adapters.NewPagerFragmentAdapter;
 import list.umorili.android.com.umorili.database.AppDatabase;
 import list.umorili.android.com.umorili.entity.FavoriteEntity;
 import list.umorili.android.com.umorili.entity.FavoriteEntity_Table;
+import list.umorili.android.com.umorili.fragments.FavoriteFragment_;
+import list.umorili.android.com.umorili.fragments.MainFragment_;
 import list.umorili.android.com.umorili.rest.models.GetListModel;
 import list.umorili.android.com.umorili.entity.MainEntity;
 import list.umorili.android.com.umorili.fragments.FavoriteFragment;
@@ -38,30 +48,35 @@ import list.umorili.android.com.umorili.rest.RestService;
 import list.umorili.android.com.umorili.sync.BashSyncJob;
 
 @EActivity(R.layout.activity_main)
-public class MainActivity extends AppCompatActivity implements SwipeRefreshLayout.OnRefreshListener {
+public class MainActivity extends AppCompatActivity implements ViewPager.OnPageChangeListener, TabHost.OnTabChangeListener {
 
-    private final static String TAG1 = "tag1";
-    private final static String TAG2 = "tag2";
-
-    public static SwipeRefreshLayout mSwipeRefreshLayout;
     public static RestService restService = new RestService();
     public static List<GetListModel> getListModels;
     private static SharedPreferences sharedPreferences;
     public static String service_setting;
+    public static FlowContentObserver observer = new FlowContentObserver();
+   ViewPager viewPager;
+
     @ViewById
     TabHost tabHost;
     @ViewById
     Toolbar toolbar;
 
-    private void initSwipeRefreshLayout() {
-        mSwipeRefreshLayout = (SwipeRefreshLayout) findViewById(R.id.swipe_container);
-        mSwipeRefreshLayout.setOnRefreshListener(this);
-        mSwipeRefreshLayout.setColorSchemeResources(android.R.color.holo_blue_bright,
-                android.R.color.holo_green_light,
-                android.R.color.holo_orange_light,
-                android.R.color.holo_red_light);
 
+    public void initViewPager() {
+        viewPager = (ViewPager) findViewById(R.id.viewPager);
+        List<Fragment> fragments = new ArrayList<>();
+        NewPagerFragmentAdapter pagerFragmentAdapter;
+        fragments.add(new MainFragment());
+        fragments.add(new FavoriteFragment());
+
+        viewPager.setOffscreenPageLimit(2);
+        pagerFragmentAdapter = new NewPagerFragmentAdapter(getSupportFragmentManager(), fragments);
+        viewPager.setAdapter(pagerFragmentAdapter);
+
+        viewPager.setOnPageChangeListener(this);
     }
+
 
     private void clearJobSync() {
         int idJob = BashSyncJob.schedulePeriodicJob();
@@ -69,13 +84,21 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
             BashSyncJob.cancelJob(i);
     }
 
-    private void initTab(String tag, String tabHeader, int tab) {
+    private void initTab() {
 
+        tabHost = (TabHost) findViewById(R.id.tabHost);
+        tabHost.setup();
 
-        TabHost.TabSpec tabSpec = tabHost.newTabSpec(tag);
-        tabSpec.setIndicator(tabHeader);
-        tabSpec.setContent(tab);
-        tabHost.addTab(tabSpec);
+        String[] tabName = {"Главное", "Избранное"};
+
+        for (int i = 0; i < tabName.length; i ++){
+            TabHost.TabSpec tabSpec;
+            tabSpec = tabHost.newTabSpec(tabName[i]);
+            tabSpec.setIndicator(tabName[i]);
+            tabSpec.setContent(new ContentFactory(getApplicationContext()));
+            tabHost.addTab(tabSpec);
+        }
+        tabHost.setOnTabChangedListener(this);
 
     }
 
@@ -117,16 +140,16 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     public void main() {
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+        observer.registerForContentChanges(this, MainEntity.class);
+
         initStetho();
-        initSwipeRefreshLayout();
         clearJobSync();
         setSupportActionBar(toolbar);
         tabHost.setup();
-        initTab(TAG1, getString(R.string.main_tab), R.id.tab1);
-        initTab(TAG2, getString(R.string.favorite_tab), R.id.tab2);
+        initViewPager();
+        initTab();
         service_setting = sharedPreferences.getString(getString(R.string.pref_setting_service), getString(R.string.news));
-
-        MainFragment mainFragment = new MainFragment();
+       /* MainFragment mainFragment = new MainFragment();
         replaceFragment(mainFragment, R.id.tab1);
         setTitle(getString(R.string.history_title));
         tabHost.setCurrentTabByTag(TAG1);
@@ -147,15 +170,7 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
                         break;
                 }
             }
-        });
-
-    }
-
-    @Override
-    public void onRefresh() {
-        service_setting = sharedPreferences.getString(getString(R.string.pref_setting_service), getString(R.string.news));
-        delete();
-        loadMainEntity();
+        });*/
 
     }
 
@@ -166,10 +181,10 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         loadMainEntity();
     }
 
-    @UiThread
-    public void CloseRefresh(){
-        mSwipeRefreshLayout.setRefreshing(false);
-    }
+
+
+
+
 
     @Override
     public void onBackPressed() {
@@ -179,11 +194,8 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
     @Background
     public void loadMainEntity() {
 
-        if (service_setting.equals(getString(R.string.news_title_array))){
-            service_setting = getString(R.string.news);
-        } else service_setting = getString(R.string.bezdna);
         try {
-            getListModels = (restService.viewListInMainFragmenr(ConstantManager.SITE, service_setting, ConstantManager.NUM));
+            getListModels = (restService.viewListInMainFragmenr(ConstantManager.SITE, ConstantManager.NAME, ConstantManager.NUM));
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -196,13 +208,11 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
                 for (GetListModel quote : quotes) {
                     quoteEntity.setId(quote.getLink());
                     quoteEntity.setList(replaceSimbolInText(quote.getElementPureHtml()));
-                    if ((SQLite.select().from(FavoriteEntity.class).where(FavoriteEntity_Table.id_list.eq(quote.getLink())).queryList().size() <= 0)
-                            &&(SQLite.select().from(FavoriteEntity.class).where(FavoriteEntity_Table.favorite_list.eq(replaceSimbolInText(quote.getElementPureHtml()))).queryList().size() <= 0))
+                    if ((SQLite.select().from(FavoriteEntity.class).where(FavoriteEntity_Table.id_list.eq(quote.getLink())).queryList().size() <= 0))
                         quoteEntity.setFavorite(false);
                     else quoteEntity.setFavorite(true);
                     quoteEntity.save(databaseWrapper);
                 }
-                CloseRefresh();
             }
         });
 
@@ -213,4 +223,24 @@ public class MainActivity extends AppCompatActivity implements SwipeRefreshLayou
         MainEntity.deleteAll();
     }
 
+    @Override
+    public void onPageScrolled(int position, float positionOffset, int positionOffsetPixels) {
+
+    }
+
+    @Override
+    public void onPageSelected(int position) {
+        tabHost.setCurrentTab(position);
+    }
+
+    @Override
+    public void onPageScrollStateChanged(int state) {
+
+    }
+
+    @Override
+    public void onTabChanged(String s) {
+        int selectedItem = tabHost.getCurrentTab();
+        viewPager.setCurrentItem(selectedItem);
+    }
 }

@@ -29,51 +29,39 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     app:popupTheme="@style/AppTheme.PopupOverlay" />
+                <HorizontalScrollView
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:id="@+id/horizontal_scroll"
+                    android:fillViewport="true"
+                    android:scrollbars="none">
+
                     <TabWidget
                         android:id="@android:id/tabs"
                         android:layout_width="match_parent"
 
                         android:layout_height="wrap_content"/>
-
+            </HorizontalScrollView>
             </android.support.design.widget.AppBarLayout>
 
-            <android.support.v4.widget.SwipeRefreshLayout
-                android:id="@+id/swipe_container"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-            <android.support.v4.widget.NestedScrollView
-                android:isScrollContainer="true"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent">
-                <ScrollView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent">
+
+
             <FrameLayout
                 android:id="@android:id/tabcontent"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:gravity="top">
+               >
+<android.support.v4.view.ViewPager
+    android:layout_width="match_parent"
 
-                <LinearLayout
-                    android:id="@+id/tab1"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
+    android:layout_height="match_parent"
+    android:id="@+id/viewPager">
 
-                </LinearLayout>
-
-                <LinearLayout
-                    android:id="@+id/tab2"
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:orientation="vertical">
-
-                </LinearLayout>
+</android.support.v4.view.ViewPager>
 
             </FrameLayout>
-                </ScrollView>
-            </android.support.v4.widget.NestedScrollView>
-            </android.support.v4.widget.SwipeRefreshLayout>
+
+
 
         </LinearLayout>
 

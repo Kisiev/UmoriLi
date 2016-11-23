@@ -53,7 +53,6 @@ public class BashSyncJob extends Job {
     private String ledNotificationsKey;
     private static final boolean DEFAULT_VALUE = true;
     private static int countNotify = 1;
-    private  String service_setting;
     public static final String TAG = "job_demo_tag";
     public static RestService restService = new RestService();
     public static List<GetListModel> getListModels;
@@ -61,11 +60,7 @@ public class BashSyncJob extends Job {
     @Override
     @NonNull
     protected Result onRunJob(Params params) {
-        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
-        service_setting = mSharedPreferences.getString(getContext().getString(R.string.pref_setting_service), getContext().getString(R.string.news));
-        if (service_setting.equals(getContext().getString(R.string.news_title_array))){
-            service_setting = getContext().getString(R.string.news);
-        } else service_setting = getContext().getString(R.string.bezdna);
+
         try {
             loadMainEntity();
         } catch (IOException e) {
@@ -92,7 +87,7 @@ public class BashSyncJob extends Job {
 
     private void loadMainEntity() throws IOException {
         try {
-            getListModels = (restService.viewListInMainFragmenr(ConstantManager.SITE, service_setting, ConstantManager.NUM));
+            getListModels = (restService.viewListInMainFragmenr(ConstantManager.SITE, ConstantManager.NAME, ConstantManager.NUM));
         } catch (IOException e) {
             e.printStackTrace();
         }

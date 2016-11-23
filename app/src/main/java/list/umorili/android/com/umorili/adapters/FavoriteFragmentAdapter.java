@@ -15,12 +15,15 @@ import list.umorili.android.com.umorili.entity.FavoriteEntity;
 import list.umorili.android.com.umorili.entity.FavoriteEntity_Table;
 import list.umorili.android.com.umorili.entity.MainEntity;
 import list.umorili.android.com.umorili.entity.MainEntity_Table;
+import list.umorili.android.com.umorili.fragments.FavoriteFragment;
+import list.umorili.android.com.umorili.fragments.MainFragment;
 
 public class FavoriteFragmentAdapter extends SelectableAdapter<FavoriteFragmentAdapter.FavoriteFragmentHolder>{
     private Context context;
     ClickListener clickListener;
     FavoriteEntity favoriteEntity;
     List<FavoriteEntity> favoriteEntityList;
+    RecyclerView recyclerView;
 
 
     public FavoriteFragmentAdapter(List<FavoriteEntity> favoriteEntity, ClickListener clickListener, Context context) {
@@ -33,11 +36,13 @@ public class FavoriteFragmentAdapter extends SelectableAdapter<FavoriteFragmentA
     public FavoriteFragmentHolder onCreateViewHolder(ViewGroup parent, int viewType) {
         View view = LayoutInflater.from(parent.getContext())
                 .inflate(R.layout.favorite_fragment_item, parent, false);
+        recyclerView = (RecyclerView) view.findViewById(R.id.main_fragment_recycler);
         return new FavoriteFragmentHolder(view, clickListener);
     }
 
     @Override
     public void onBindViewHolder(FavoriteFragmentHolder holder, int position) {
+
         favoriteEntity = favoriteEntityList.get(position);
         holder.name.setText(favoriteEntity.getList());
         holder.selectedItem.setVisibility(isSelected(position) ? View.VISIBLE : View.INVISIBLE);
@@ -58,8 +63,8 @@ public class FavoriteFragmentAdapter extends SelectableAdapter<FavoriteFragmentA
     private void removeCategory(int position) {
         if (favoriteEntityList.get(position) != null) {
             favoriteEntityList.get(position).delete();
-            SQLite.update(MainEntity.class).set(MainEntity_Table.favorite.eq(false)).where(MainEntity_Table.content.eq(favoriteEntityList.get(position).getList())).async().execute();
-            SQLite.delete(FavoriteEntity.class).where(FavoriteEntity_Table.favorite_list.eq(favoriteEntityList.get(position).getList())).async().execute();
+            MainEntity.updateFavorite(favoriteEntityList.get(position).getId_list(), false);
+            FavoriteEntity.delete(favoriteEntityList.get(position).getId_list());
             favoriteEntityList.remove(position);
         }
     }
@@ -86,6 +91,7 @@ public class FavoriteFragmentAdapter extends SelectableAdapter<FavoriteFragmentA
 
         @Override
         public boolean onLongClick(View v) {
+
             return clickListener != null && clickListener.onItemLongSelected(getAdapterPosition());
         }
     }
@@ -100,15 +106,16 @@ public class FavoriteFragmentAdapter extends SelectableAdapter<FavoriteFragmentA
             if (positions.size() == 1) {
                 removeItem(positions.get(0));
                 positions.remove(0);
+                MainFragment.recyclerView.setAdapter(new MainFragtentAdapter(MainEntity.listUmor()));
             } else {
                 for (int i = 0; i < positions.size();i ++){
                     removeItem(positions.get(0));
                     positions.remove(0);
-                    SQLite.update(MainEntity.class).set(MainEntity_Table.favorite.eq(false)).where(MainEntity_Table.content.eq(favoriteEntityList.get(positions.get(0)).getList())).async().execute();
-                    SQLite.delete(FavoriteEntity.class).where(FavoriteEntity_Table.favorite_list.eq(favoriteEntityList.get(positions.get(0)).getList())).async().execute();
-                }
 
+                }
+                MainFragment.recyclerView.setAdapter(new MainFragtentAdapter(MainEntity.listUmor()));
             }
+
         }
     }
     public String selectItem(List<Integer> positions) {
