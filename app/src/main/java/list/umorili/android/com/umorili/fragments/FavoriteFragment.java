@@ -9,6 +9,7 @@ import android.os.Bundle;
 import android.os.Handler;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.support.v4.app.FragmentManager;
 import android.support.v4.app.LoaderManager;
 import android.support.v4.content.AsyncTaskLoader;
 import android.support.v4.content.Loader;
@@ -207,7 +208,6 @@ public class FavoriteFragment extends Fragment {
             mode.getMenuInflater().inflate(R.menu.contextual_action_bar, menu);
             return true;
         }
-
         @Override
         public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
             return false;
@@ -233,6 +233,9 @@ public class FavoriteFragment extends Fragment {
                         ClipboardManager clipboard = (ClipboardManager) getActivity().getSystemService(Context.CLIPBOARD_SERVICE);
                         ClipData clip = ClipData.newPlainText(getString(R.string.copy), adapter.selectItem(adapter.getSelectedItems()));
                         clipboard.setPrimaryClip(clip);
+                        Toast.makeText(getActivity(), R.string.copyTo, Toast.LENGTH_SHORT).show();
+                        actionMode.finish();
+                        adapter.clearSelection();
                     } else Toast.makeText(getActivity(), R.string.error_copy, Toast.LENGTH_SHORT).show();
                     return true;
                 default:
