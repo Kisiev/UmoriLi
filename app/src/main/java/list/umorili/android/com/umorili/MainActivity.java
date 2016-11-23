@@ -141,7 +141,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         observer.registerForContentChanges(this, MainEntity.class);
-
+        setTitle(sharedPreferences.getString(getString(R.string.pref_setting_service), getString(R.string.news_title_array)));
         initStetho();
         clearJobSync();
         setSupportActionBar(toolbar);
@@ -242,5 +242,6 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     public void onTabChanged(String s) {
         int selectedItem = tabHost.getCurrentTab();
         viewPager.setCurrentItem(selectedItem);
+
     }
 }
