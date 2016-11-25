@@ -13,10 +13,7 @@ import java.util.Comparator;
 import java.util.List;
 import list.umorili.android.com.umorili.R;
 import list.umorili.android.com.umorili.entity.FavoriteEntity;
-import list.umorili.android.com.umorili.entity.FavoriteEntity_Table;
 import list.umorili.android.com.umorili.entity.MainEntity;
-import list.umorili.android.com.umorili.entity.MainEntity_Table;
-import list.umorili.android.com.umorili.fragments.FavoriteFragment;
 import list.umorili.android.com.umorili.fragments.MainFragment;
 
 public class FavoriteFragmentAdapter extends SelectableAdapter<FavoriteFragmentAdapter.FavoriteFragmentHolder>{

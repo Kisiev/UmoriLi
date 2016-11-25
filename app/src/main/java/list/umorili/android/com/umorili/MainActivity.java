@@ -1,6 +1,7 @@
 package list.umorili.android.com.umorili;
 
 import android.content.SharedPreferences;
+import android.os.Handler;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -38,8 +39,6 @@ import list.umorili.android.com.umorili.adapters.NewPagerFragmentAdapter;
 import list.umorili.android.com.umorili.database.AppDatabase;
 import list.umorili.android.com.umorili.entity.FavoriteEntity;
 import list.umorili.android.com.umorili.entity.FavoriteEntity_Table;
-import list.umorili.android.com.umorili.fragments.FavoriteFragment_;
-import list.umorili.android.com.umorili.fragments.MainFragment_;
 import list.umorili.android.com.umorili.rest.models.GetListModel;
 import list.umorili.android.com.umorili.entity.MainEntity;
 import list.umorili.android.com.umorili.fragments.FavoriteFragment;
@@ -116,6 +115,10 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         newText = newText.replace("&gt;", ">");
         newText = newText.replace("&quot;", "''");
         newText = newText.replace("&amp;", "&");
+        newText = newText.replace("&nbsp;", " ");
+        newText = newText.replace("&laquo;", "''");
+        newText = newText.replace("&raquo;", "''");
+        newText = newText.replace("&curren;", "|");
 
         return newText;
     }
@@ -149,9 +152,9 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         finish();
     }
 
+
     @Background
     public void loadMainEntity() {
-
         try {
             getListModels = (restService.viewListInMainFragmenr(ConstantManager.SITE, ConstantManager.NAME, ConstantManager.NUM));
         } catch (IOException e) {

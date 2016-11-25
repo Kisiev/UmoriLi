@@ -2,12 +2,6 @@ package list.umorili.android.com.umorili.adapters;
 
 import android.os.Bundle;
 import android.os.Handler;
-import android.support.v4.app.Fragment;
-import android.support.v4.app.LoaderManager;
-import android.support.v4.content.AsyncTaskLoader;
-import android.support.v4.content.Loader;
-import android.support.v4.view.ViewPager;
-import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -17,13 +11,9 @@ import android.widget.CompoundButton;
 import android.widget.TextView;
 
 import com.raizlabs.android.dbflow.sql.language.SQLite;
-import com.raizlabs.android.dbflow.structure.BaseModel;
 
-import java.util.ArrayList;
 import java.util.List;
 
-import list.umorili.android.com.umorili.ConstantManager;
-import list.umorili.android.com.umorili.MainActivity;
 import list.umorili.android.com.umorili.R;
 import list.umorili.android.com.umorili.entity.FavoriteEntity;
 
@@ -31,9 +21,7 @@ import list.umorili.android.com.umorili.entity.FavoriteEntity;
 import list.umorili.android.com.umorili.entity.FavoriteEntity_Table;
 import list.umorili.android.com.umorili.entity.MainEntity;
 import list.umorili.android.com.umorili.fragments.FavoriteFragment;
-import list.umorili.android.com.umorili.fragments.MainFragment;
 
-import static list.umorili.android.com.umorili.R.id.viewPager;
 
 
 public class MainFragtentAdapter extends RecyclerView.Adapter<MainFragtentAdapter.MainFragmentHolder> {

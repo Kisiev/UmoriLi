@@ -134,7 +134,7 @@ public class BashSyncJob extends Job {
                 .setContentIntent(pendingIntent);
 
         if (isLedEnabled) {
-            builder.setLights(Color.BLUE, LED_LIGHTS_TIME_ON, LED_LIGHTS_TIME_OFF);
+            builder.setLights(Color.YELLOW, LED_LIGHTS_TIME_ON, LED_LIGHTS_TIME_OFF);
         }
 
         if (isSoundEnabled) {

@@ -20,11 +20,7 @@
         >
 
         <activity android:name=".MainActivity_" android:theme="@style/AppTheme.NoActionBar" android:screenOrientation="portrait">
-            <intent-filter>
-                <action android:name="android.intent.action.MAIN"/>
 
-                <category android:name="android.intent.category.LAUNCHER"/>
-            </intent-filter>
         </activity>
 
         <activity
@@ -33,6 +29,16 @@
             android:label="@string/setting_menu"
             android:parentActivityName=".MainActivity_">
 
+        </activity>
+
+        <activity android:name="list.umorili.android.com.umorili.SplashActivity_"
+                  android:theme="@style/AppTheme.NoActionBar"
+                  android:screenOrientation="portrait">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
         </activity>
 
     </application>

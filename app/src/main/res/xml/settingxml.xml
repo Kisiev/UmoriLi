@@ -37,16 +37,4 @@
 
     </android.support.v7.preference.PreferenceCategory>
 
-    <android.support.v7.preference.PreferenceCategory android:title="Настройка сервиса">
-        <android.support.v7.preference.ListPreference
-            android:key="@string/pref_setting_service"
-            android:title="@string/pref_setting_service_title"
-            android:defaultValue="1"
-            android:summary="@string/pref_list_switch"
-            android:entries="@array/column"
-            android:entryValues="@array/column"
-            android:dialogTitle="@string/pref_setting_service_dialog_title" />
-
-    </android.support.v7.preference.PreferenceCategory>
-
 </android.support.v7.preference.PreferenceScreen>

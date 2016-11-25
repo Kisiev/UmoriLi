@@ -54,6 +54,7 @@ import java.util.List;
 import list.umorili.android.com.umorili.ConstantManager;
 
 import list.umorili.android.com.umorili.MainActivity;
+import list.umorili.android.com.umorili.MainActivity_;
 import list.umorili.android.com.umorili.R;
 import list.umorili.android.com.umorili.SettingActivity;
 import list.umorili.android.com.umorili.SettingActivity_;
