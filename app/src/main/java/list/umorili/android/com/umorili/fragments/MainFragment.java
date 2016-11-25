@@ -64,7 +64,6 @@ import list.umorili.android.com.umorili.entity.MainEntity;
 public class MainFragment extends Fragment implements SwipeRefreshLayout.OnRefreshListener {
 
     SwipeRefreshLayout mSwipeRefreshLayout;
-   // FlowContentObserver observer = new FlowContentObserver();
     @ViewById(R.id.checkbox)
     CheckBox checkBox;
     public static RecyclerView recyclerView;
@@ -73,14 +72,10 @@ public class MainFragment extends Fragment implements SwipeRefreshLayout.OnRefre
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-        Log.d("MainFragment", "onCreate");
-
     }
-
     @Nullable
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
-        Log.d("ONSTART", "onCreateView");
         setHasOptionsMenu(true);
         View view = inflater.inflate(R.layout.main_fragment, container, false);
         recyclerView = (RecyclerView) view.findViewById(R.id.main_fragment_recycler);
@@ -135,17 +130,14 @@ public class MainFragment extends Fragment implements SwipeRefreshLayout.OnRefre
         super.onStart();
         context = getActivity();
         loadEntity();
-        Log.d("ONSTART", "OnStart");
     }
 
     @Override
     public void onResume() {
         super.onResume();
-       // MainActivity.observer.registerForContentChanges(getActivity(), MainEntity.class);
         MainActivity.observer.addOnTableChangedListener(new FlowContentObserver.OnTableChangedListener() {
             @Override
             public void onTableChanged(@Nullable Class<? extends Model> tableChanged, BaseModel.Action action) {
-                Log.d("OBERV", "DAAAA");
                 loadEntity();
             }
         });

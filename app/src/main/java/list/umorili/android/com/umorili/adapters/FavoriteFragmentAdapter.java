@@ -1,6 +1,7 @@
 package list.umorili.android.com.umorili.adapters;
 
 import android.content.Context;
+import android.os.Handler;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -63,12 +64,20 @@ public class FavoriteFragmentAdapter extends SelectableAdapter<FavoriteFragmentA
     private void removeCategory(int position) {
         if (favoriteEntityList.get(position) != null) {
             favoriteEntityList.get(position).delete();
-            MainEntity.updateFavorite(favoriteEntityList.get(position).getId_list(), false);
-            FavoriteEntity.delete(favoriteEntityList.get(position).getId_list());
             favoriteEntityList.remove(position);
+            updateTables(position);
         }
     }
 
+    private void updateTables(final int position){
+        new Handler().post(new Runnable() {
+            @Override
+            public void run() {
+                MainEntity.updateFavorite(favoriteEntityList.get(position).getId_list(), false);
+                FavoriteEntity.delete(favoriteEntityList.get(position).getId_list());
+            }
+        });
+    }
     class FavoriteFragmentHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener{
 
         TextView name;

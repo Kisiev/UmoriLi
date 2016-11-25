@@ -89,7 +89,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         tabHost = (TabHost) findViewById(R.id.tabHost);
         tabHost.setup();
 
-        String[] tabName = {"Главное", "Избранное"};
+        String[] tabName = {getString(R.string.main_tab), getString(R.string.favorite_tab)};
 
         for (int i = 0; i < tabName.length; i ++){
             TabHost.TabSpec tabSpec;
@@ -103,23 +103,6 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     }
 
 
-    private void replaceFragment(Fragment fragment, int id) {
-        String backStackName = fragment.getClass().getName();
-
-        FragmentManager manager = getSupportFragmentManager();
-        boolean fragmentPopped = manager.popBackStackImmediate(backStackName, 0);
-
-        if (!fragmentPopped && manager.findFragmentByTag(backStackName) == null) {
-
-            FragmentTransaction ft = manager.beginTransaction();
-            ft.replace(id, fragment, backStackName);
-            ft.addToBackStack(backStackName);
-            ft.commit();
-        }
-
-
-    }
-
     private void initStetho(){
         Stetho.initialize(Stetho.newInitializerBuilder(this)
                 .enableWebKitInspector(Stetho.defaultInspectorModulesProvider(this))
@@ -132,6 +115,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         newText = newText.replace("&lt;", "<");
         newText = newText.replace("&gt;", ">");
         newText = newText.replace("&quot;", "''");
+        newText = newText.replace("&amp;", "&");
 
         return newText;
     }
@@ -141,7 +125,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
 
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         observer.registerForContentChanges(this, MainEntity.class);
-        setTitle(sharedPreferences.getString(getString(R.string.pref_setting_service), getString(R.string.news_title_array)));
+
         initStetho();
         clearJobSync();
         setSupportActionBar(toolbar);
@@ -149,42 +133,16 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         initViewPager();
         initTab();
         service_setting = sharedPreferences.getString(getString(R.string.pref_setting_service), getString(R.string.news));
-       /* MainFragment mainFragment = new MainFragment();
-        replaceFragment(mainFragment, R.id.tab1);
-        setTitle(getString(R.string.history_title));
-        tabHost.setCurrentTabByTag(TAG1);
-        tabHost.setOnTabChangedListener(new TabHost.OnTabChangeListener() {
-            @Override
-            public void onTabChanged(String s) {
-                switch (s) {
-                    case TAG1:
-                        MainFragment mainFragment = new MainFragment();
-                        replaceFragment(mainFragment, R.id.tab1);
-                        setTitle(getString(R.string.history_title));
-                        break;
-                    case TAG2:
-
-                        FavoriteFragment favoriteFragment = new FavoriteFragment();
-                        replaceFragment(favoriteFragment, R.id.tab2);
-                        setTitle(getString(R.string.favorite));
-                        break;
-                }
-            }
-        });*/
 
     }
 
     @Override
     protected void onStart() {
         super.onStart();
+        setTitle(sharedPreferences.getString(getString(R.string.pref_setting_service), getString(R.string.news_title_array)));
         delete();
         loadMainEntity();
     }
-
-
-
-
-
 
     @Override
     public void onBackPressed() {

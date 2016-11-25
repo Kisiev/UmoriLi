@@ -42,6 +42,38 @@ public class MainFragtentAdapter extends RecyclerView.Adapter<MainFragtentAdapte
     public View viewForPager;
     RecyclerView recyclerView;
 
+    private void setFavoriteList(final MainFragmentHolder holder) {
+        new Handler().post(new Runnable() {
+            @Override
+            public void run() {
+                holder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+                    @Override
+                    public void onCheckedChanged(final CompoundButton compoundButton, boolean b) {
+
+                        if (compoundButton.isChecked()) {
+                            if ((SQLite.select().from(FavoriteEntity.class).where(FavoriteEntity_Table.id_list.eq(mainEntityList.get(holder.getAdapterPosition()).getId())).queryList().isEmpty())) {
+                                FavoriteEntity.insert(mainEntityList.get(holder.getAdapterPosition()).getId(), mainEntityList.get(holder.getAdapterPosition()).getList());
+                                MainEntity.updateFavorite(mainEntityList.get(holder.getAdapterPosition()).getId(), true);
+
+                            }
+
+                        } else {
+                            FavoriteEntity.delete(mainEntityList.get(holder.getAdapterPosition()).getId());
+                            MainEntity.updateFavorite(mainEntityList.get(holder.getAdapterPosition()).getId(), false);
+                        }
+                        mainEntityList = MainEntity.listUmor();
+                        FavoriteFragment.adapter.favoriteEntityList = null;
+
+                        FavoriteFragment.adapter = new FavoriteFragmentAdapter(FavoriteEntity.selectedALL(), FavoriteFragment.adapter.clickListener, FavoriteFragment.context);
+                        FavoriteFragment.recyclerView.setAdapter(FavoriteFragment.adapter);
+
+                    }
+                });
+            }
+        });
+
+    }
+
     public MainFragtentAdapter(List<MainEntity> mainEntity) {
         this.mainEntityList = mainEntity;
     }
@@ -60,37 +92,13 @@ public class MainFragtentAdapter extends RecyclerView.Adapter<MainFragtentAdapte
 
         holder.name.setText(mainEntity.getList());
         holder.checkBox.setChecked(mainEntity.isFavorite());
-        holder.checkBox.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
-            @Override
-            public void onCheckedChanged(final CompoundButton compoundButton, boolean b) {
-
-                       if (compoundButton.isChecked()) {
-                           if ((SQLite.select().from(FavoriteEntity.class).where(FavoriteEntity_Table.id_list.eq(mainEntityList.get(holder.getAdapterPosition()).getId())).queryList().isEmpty())) {
-                               FavoriteEntity.insert(mainEntityList.get(holder.getAdapterPosition()).getId(), mainEntityList.get(holder.getAdapterPosition()).getList());
-                               MainEntity.updateFavorite(mainEntityList.get(holder.getAdapterPosition()).getId(), true);
-
-                           }
-
-                       } else {
-                           FavoriteEntity.delete(mainEntityList.get(holder.getAdapterPosition()).getId());
-                           MainEntity.updateFavorite(mainEntityList.get(holder.getAdapterPosition()).getId(), false);
-                       }
-                mainEntityList = MainEntity.listUmor();
-                FavoriteFragment.adapter.favoriteEntityList = null;
-
-                FavoriteFragment.adapter = new FavoriteFragmentAdapter(FavoriteEntity.selectedALL(), FavoriteFragment.adapter.clickListener, FavoriteFragment.context);
-                FavoriteFragment.recyclerView.setAdapter(FavoriteFragment.adapter);
-
-            }
-        });
-
+        setFavoriteList(holder);
     }
 
     @Override
     public int getItemCount() {
         return mainEntityList.size();
     }
-
 
 
     class MainFragmentHolder extends RecyclerView.ViewHolder {
@@ -104,14 +112,6 @@ public class MainFragtentAdapter extends RecyclerView.Adapter<MainFragtentAdapte
             checkBox = (CheckBox) item.findViewById(R.id.checkbox);
         }
 
-    }
-
-    private static List<Fragment> restart() {
-        List<Fragment> fragments = new ArrayList<>();
-        fragments.add(new MainFragment());
-        fragments.add(new FavoriteFragment());
-
-        return fragments;
     }
 
 }
