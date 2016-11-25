@@ -66,7 +66,7 @@ public class BashSyncJob extends Job {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        if (countNotify > 1) sendNotification();
+        if (countNotify >= 1) sendNotification();
         countNotify = 1;
         return Result.SUCCESS;
     }

@@ -1,7 +1,10 @@
 package list.umorili.android.com.umorili;
 
+import android.content.Context;
 import android.content.SharedPreferences;
+import android.os.Bundle;
 import android.os.Handler;
+import android.os.PersistableBundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
@@ -12,9 +15,12 @@ import android.support.v4.widget.SwipeRefreshLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.support.v7.widget.RecyclerView;
 import android.support.v7.widget.Toolbar;
+import android.util.AttributeSet;
 import android.util.Log;
+import android.view.View;
 import android.widget.TabHost;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.facebook.stetho.Stetho;
 import com.raizlabs.android.dbflow.config.FlowManager;
@@ -27,7 +33,9 @@ import com.raizlabs.android.dbflow.structure.database.transaction.ITransaction;
 
 import org.androidannotations.annotations.AfterViews;
 import org.androidannotations.annotations.Background;
+import org.androidannotations.annotations.Bean;
 import org.androidannotations.annotations.EActivity;
+import org.androidannotations.annotations.EBean;
 import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
 
@@ -46,6 +54,7 @@ import list.umorili.android.com.umorili.fragments.MainFragment;
 import list.umorili.android.com.umorili.rest.RestService;
 import list.umorili.android.com.umorili.sync.BashSyncJob;
 
+@EBean
 @EActivity(R.layout.activity_main)
 public class MainActivity extends AppCompatActivity implements ViewPager.OnPageChangeListener, TabHost.OnTabChangeListener {
 
@@ -54,7 +63,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     private static SharedPreferences sharedPreferences;
     public static String service_setting;
     public static FlowContentObserver observer = new FlowContentObserver();
-   ViewPager viewPager;
+    ViewPager viewPager;
 
     @ViewById
     TabHost tabHost;
@@ -90,7 +99,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
 
         String[] tabName = {getString(R.string.main_tab), getString(R.string.favorite_tab)};
 
-        for (int i = 0; i < tabName.length; i ++){
+        for (int i = 0; i < tabName.length; i++) {
             TabHost.TabSpec tabSpec;
             tabSpec = tabHost.newTabSpec(tabName[i]);
             tabSpec.setIndicator(tabName[i]);
@@ -102,7 +111,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     }
 
 
-    private void initStetho(){
+    private void initStetho() {
         Stetho.initialize(Stetho.newInitializerBuilder(this)
                 .enableWebKitInspector(Stetho.defaultInspectorModulesProvider(this))
                 .enableDumpapp(Stetho.defaultDumperPluginsProvider(this))
@@ -125,7 +134,8 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
 
     @AfterViews
     public void main() {
-
+        delete();
+        loadMainEntity();
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         observer.registerForContentChanges(this, MainEntity.class);
 
@@ -136,15 +146,12 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         initViewPager();
         initTab();
         service_setting = sharedPreferences.getString(getString(R.string.pref_setting_service), getString(R.string.news));
-
     }
 
     @Override
     protected void onStart() {
         super.onStart();
         setTitle(sharedPreferences.getString(getString(R.string.pref_setting_service), getString(R.string.news_title_array)));
-        delete();
-        loadMainEntity();
     }
 
     @Override
@@ -176,7 +183,6 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
                 }
             }
         });
-
     }
 
 
@@ -205,4 +211,5 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         viewPager.setCurrentItem(selectedItem);
 
     }
+
 }

@@ -45,7 +45,9 @@ import org.androidannotations.annotations.ViewById;
 import java.util.List;
 
 import list.umorili.android.com.umorili.ConstantManager;
+import list.umorili.android.com.umorili.MainActivity_;
 import list.umorili.android.com.umorili.R;
+import list.umorili.android.com.umorili.SplashActivity_;
 import list.umorili.android.com.umorili.adapters.ClickListener;
 import list.umorili.android.com.umorili.adapters.FavoriteFragmentAdapter;
 import list.umorili.android.com.umorili.adapters.MainFragtentAdapter;
@@ -149,55 +151,58 @@ public class FavoriteFragment extends Fragment {
         inflater.inflate(R.menu.menu_activity, menu);
     }
     public void loadEntity() {
-        new Handler().post(new Runnable() {
-            @Override
-            public void run() {
-                getLoaderManager().restartLoader(ConstantManager.ID_FRAGMENT, null, new LoaderManager.LoaderCallbacks<List<FavoriteEntity>>() {
-                    @Override
-                    public Loader<List<FavoriteEntity>> onCreateLoader(int id, Bundle args) {
-                        final AsyncTaskLoader<List<FavoriteEntity>> loader = new AsyncTaskLoader<List<FavoriteEntity>>(getActivity()) {
-                            @Override
-                            public List<FavoriteEntity> loadInBackground() {
-                                return FavoriteEntity.selectedALL();
-                            }
-                        };
-                        loader.forceLoad();
-                        return loader;
-                    }
+        try {
+            new Handler().post(new Runnable() {
+                @Override
+                public void run() {
+                    getLoaderManager().restartLoader(ConstantManager.ID_FRAGMENT, null, new LoaderManager.LoaderCallbacks<List<FavoriteEntity>>() {
+                        @Override
+                        public Loader<List<FavoriteEntity>> onCreateLoader(int id, Bundle args) {
+                            final AsyncTaskLoader<List<FavoriteEntity>> loader = new AsyncTaskLoader<List<FavoriteEntity>>(getActivity()) {
+                                @Override
+                                public List<FavoriteEntity> loadInBackground() {
+                                    return FavoriteEntity.selectedALL();
+                                }
+                            };
+                            loader.forceLoad();
+                            return loader;
+                        }
 
-                    @Override
-                    public void onLoadFinished(Loader<List<FavoriteEntity>> loader, List<FavoriteEntity> data) {
-                        adapter = new FavoriteFragmentAdapter(data, new ClickListener() {
-                            @Override
-                            public void onItemSelected(int position) {
-                                if (actionMode != null) {
+                        @Override
+                        public void onLoadFinished(Loader<List<FavoriteEntity>> loader, List<FavoriteEntity> data) {
+                            adapter = new FavoriteFragmentAdapter(data, new ClickListener() {
+                                @Override
+                                public void onItemSelected(int position) {
+                                    if (actionMode != null) {
+                                        toggleSelection(position);
+                                    }
+                                }
+
+                                @Override
+                                public boolean onItemLongSelected(int position) {
+                                    if (actionMode == null) {
+                                        activity = (AppCompatActivity) getActivity();
+                                        actionMode = activity.startSupportActionMode(actionModeCallback);
+                                    }
                                     toggleSelection(position);
+                                    return true;
                                 }
-                            }
+                            }, getActivity());
 
-                            @Override
-                            public boolean onItemLongSelected(int position) {
-                                if (actionMode == null) {
-                                    activity = (AppCompatActivity) getActivity();
-                                    actionMode = activity.startSupportActionMode(actionModeCallback);
-                                }
-                                toggleSelection(position);
-                                return true;
-                            }
-                        }, getActivity());
+                            recyclerView.setAdapter(adapter);
+                            mSwipeRefreshLayout.setRefreshing(false);
 
-                        recyclerView.setAdapter(adapter);
-                        mSwipeRefreshLayout.setRefreshing(false);
+                        }
 
-                    }
+                        @Override
+                        public void onLoaderReset(Loader<List<FavoriteEntity>> loader) {
+                        }
+                    });
+                }
+            });
+        } catch (RuntimeException r){
 
-                    @Override
-                    public void onLoaderReset(Loader<List<FavoriteEntity>> loader) {
-                    }
-                });
-            }
-        });
-
+        }
 
     }
 

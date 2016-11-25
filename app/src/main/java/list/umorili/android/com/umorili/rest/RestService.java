@@ -1,6 +1,7 @@
 package list.umorili.android.com.umorili.rest;
 
 import android.support.annotation.NonNull;
+
 import java.io.IOException;
 import java.util.List;
 import list.umorili.android.com.umorili.rest.models.GetListModel;

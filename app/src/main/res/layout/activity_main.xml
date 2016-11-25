@@ -1,17 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-                android:layout_width="match_parent"
-                android:layout_height="match_parent"
-              android:orientation="vertical"
-                xmlns:app="http://schemas.android.com/apk/res-auto"
-                android:id="@+id/corn_lin">
+              xmlns:app="http://schemas.android.com/apk/res-auto"
+              android:id="@+id/corn_lin"
+              android:layout_width="match_parent"
+              android:layout_height="match_parent"
+              android:orientation="vertical">
 
 
     <TabHost
+        android:id="@+id/tabHost"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
-        android:theme="@style/TabWidgetTheme"
-        android:id="@+id/tabHost">
+        android:theme="@style/TabWidgetTheme">
 
         <LinearLayout
             android:layout_width="match_parent"
@@ -19,20 +19,21 @@
             android:orientation="vertical">
 
             <android.support.design.widget.AppBarLayout
+                android:id="@+id/app_bar_layout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:id="@+id/app_bar_layout"
                 android:theme="@style/AppTheme.AppBarOverlay">
 
                 <android.support.v7.widget.Toolbar
                     android:id="@+id/toolbar"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    app:popupTheme="@style/AppTheme.PopupOverlay" />
+                    app:popupTheme="@style/AppTheme.PopupOverlay"/>
+
                 <HorizontalScrollView
+                    android:id="@+id/horizontal_scroll"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:id="@+id/horizontal_scroll"
                     android:fillViewport="true"
                     android:scrollbars="none">
 
@@ -41,34 +42,30 @@
                         android:layout_width="match_parent"
 
                         android:layout_height="wrap_content"/>
-            </HorizontalScrollView>
+                </HorizontalScrollView>
             </android.support.design.widget.AppBarLayout>
-
 
 
             <FrameLayout
                 android:id="@android:id/tabcontent"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-               >
-<android.support.v4.view.ViewPager
-    android:layout_width="match_parent"
+                >
 
-    android:layout_height="match_parent"
-    android:id="@+id/viewPager">
+                <android.support.v4.view.ViewPager
+                    android:id="@+id/viewPager"
 
-</android.support.v4.view.ViewPager>
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent">
+
+                </android.support.v4.view.ViewPager>
 
             </FrameLayout>
-
 
 
         </LinearLayout>
 
     </TabHost>
-
-
-
 
 
 </LinearLayout>
