@@ -85,14 +85,13 @@ public class MainFragment extends Fragment {
         return view;
     }
 
-    @Background
     public void loadMainEntity() {
         mainActivity = new MainActivity(getListModels, restService);
+        mainActivity.delete();
         mainActivity.loadMainEntity();
         loadEntity();
     }
 
-    @Background
     public void loadEntity() {
         try {
 
@@ -112,6 +111,7 @@ public class MainFragment extends Fragment {
                 @Override
                 public void onLoadFinished(Loader<List<MainEntity>> loader, List<MainEntity> data) {
                     recyclerView.setAdapter(new MainFragtentAdapter(data));
+                    mSwipeRefreshLayout.setRefreshing(false);
                 }
 
                 @Override
@@ -132,8 +132,12 @@ public class MainFragment extends Fragment {
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                loadMainEntity();
-                mSwipeRefreshLayout.setRefreshing(false);
+                new Handler().postDelayed(new Runnable() {
+                    @Override
+                    public void run() {
+                        loadMainEntity();
+                    }
+                }, 1000);
             }
         });
 

@@ -167,13 +167,29 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     }
 
 
-    public void loadMainEntity(){
+    public void loadMainEntity() {
 
         Thread newThread = new Thread(new Runnable() {
             @Override
             public void run() {
                 try {
                     getListModels = (restService.viewListInMainFragmenr(ConstantManager.SITE, ConstantManager.NAME, ConstantManager.NUM));
+                    final List<GetListModel> quotes = getListModels;
+                    FlowManager.getDatabase(AppDatabase.class).executeTransaction(new ITransaction() {
+
+                        @Override
+                        public void execute(DatabaseWrapper databaseWrapper) {
+                            MainEntity quoteEntity = new MainEntity();
+                            for (GetListModel quote : quotes) {
+                                quoteEntity.setId(quote.getLink());
+                                quoteEntity.setList(replaceSimbolInText(quote.getElementPureHtml()));
+                                if ((SQLite.select().from(FavoriteEntity.class).where(FavoriteEntity_Table.id_list.eq(quote.getLink())).queryList().size() <= 0))
+                                    quoteEntity.setFavorite(false);
+                                else quoteEntity.setFavorite(true);
+                                quoteEntity.save(databaseWrapper);
+                            }
+                        }
+                    });
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
@@ -185,22 +201,6 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
         } catch (InterruptedException e) {
             e.printStackTrace();
         }
-        final List<GetListModel> quotes = getListModels;
-        FlowManager.getDatabase(AppDatabase.class).executeTransaction(new ITransaction() {
-
-            @Override
-            public void execute(DatabaseWrapper databaseWrapper) {
-                MainEntity quoteEntity = new MainEntity();
-                for (GetListModel quote : quotes) {
-                    quoteEntity.setId(quote.getLink());
-                    quoteEntity.setList(replaceSimbolInText(quote.getElementPureHtml()));
-                    if ((SQLite.select().from(FavoriteEntity.class).where(FavoriteEntity_Table.id_list.eq(quote.getLink())).queryList().size() <= 0))
-                        quoteEntity.setFavorite(false);
-                    else quoteEntity.setFavorite(true);
-                    quoteEntity.save(databaseWrapper);
-                }
-            }
-        });
     }
 
 
