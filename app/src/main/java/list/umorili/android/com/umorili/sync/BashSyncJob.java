@@ -57,6 +57,10 @@ public class BashSyncJob extends Job {
     public static RestService restService = new RestService();
     public static List<GetListModel> getListModels;
 
+    public BashSyncJob (){
+
+    }
+
     @Override
     @NonNull
     protected Result onRunJob(Params params) {
@@ -86,13 +90,25 @@ public class BashSyncJob extends Job {
     }
 
     private void loadMainEntity() throws IOException {
+        Thread newThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    getListModels = (restService.viewListInMainFragmenr(ConstantManager.SITE, ConstantManager.NAME, ConstantManager.NUM));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        newThread.start();
         try {
-            getListModels = (restService.viewListInMainFragmenr(ConstantManager.SITE, ConstantManager.NAME, ConstantManager.NUM));
-        } catch (IOException e) {
+            newThread.join();
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
         final List<GetListModel> quotes = getListModels;
         FlowManager.getDatabase(AppDatabase.class).executeTransaction(new ITransaction() {
+
             @Override
             public void execute(DatabaseWrapper databaseWrapper) {
                 MainEntity quoteEntity = new MainEntity();
@@ -100,16 +116,16 @@ public class BashSyncJob extends Job {
                     if (SQLite.select().from(MainEntity.class).where(MainEntity_Table.id.eq(quote.getLink())).queryList().size() == 0) {
                         quoteEntity.setId(quote.getLink());
                         quoteEntity.setList(MainActivity.replaceSimbolInText(quote.getElementPureHtml()));
-                        if (SQLite.select().from(FavoriteEntity.class).where(FavoriteEntity_Table.id_list.eq(quote.getLink())).queryList().size() <= 0)
+                        if ((SQLite.select().from(FavoriteEntity.class).where(FavoriteEntity_Table.id_list.eq(quote.getLink())).queryList().size() <= 0))
                             quoteEntity.setFavorite(false);
                         else quoteEntity.setFavorite(true);
                         quoteEntity.save(databaseWrapper);
                         countNotify ++;
                     }
                 }
-
             }
         });
+
     }
 
 

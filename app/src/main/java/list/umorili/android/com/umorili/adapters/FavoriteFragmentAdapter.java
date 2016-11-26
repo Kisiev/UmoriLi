@@ -7,16 +7,19 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.TextView;
+
 import com.raizlabs.android.dbflow.sql.language.SQLite;
+
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
+
 import list.umorili.android.com.umorili.R;
 import list.umorili.android.com.umorili.entity.FavoriteEntity;
 import list.umorili.android.com.umorili.entity.MainEntity;
 import list.umorili.android.com.umorili.fragments.MainFragment;
 
-public class FavoriteFragmentAdapter extends SelectableAdapter<FavoriteFragmentAdapter.FavoriteFragmentHolder>{
+public class FavoriteFragmentAdapter extends SelectableAdapter<FavoriteFragmentAdapter.FavoriteFragmentHolder> {
     private Context context;
     ClickListener clickListener;
     FavoriteEntity favoriteEntity;
@@ -59,28 +62,27 @@ public class FavoriteFragmentAdapter extends SelectableAdapter<FavoriteFragmentA
     }
 
     private void removeCategory(int position) {
+
         if (favoriteEntityList.get(position) != null) {
+            updateTables(position);
             favoriteEntityList.get(position).delete();
             favoriteEntityList.remove(position);
-            updateTables(position);
         }
     }
 
-    private void updateTables(final int position){
-        new Handler().post(new Runnable() {
-            @Override
-            public void run() {
-                MainEntity.updateFavorite(favoriteEntityList.get(position).getId_list(), false);
-                FavoriteEntity.delete(favoriteEntityList.get(position).getId_list());
-            }
-        });
+    private void updateTables(int position) {
+        MainEntity.updateFavorite(favoriteEntityList.get(position).getId_list(), false);
+        FavoriteEntity.delete(favoriteEntityList.get(position).getId_list());
+        MainFragment.recyclerView.setAdapter(new MainFragtentAdapter(MainEntity.listUmor()));
     }
-    class FavoriteFragmentHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener{
+
+    class FavoriteFragmentHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {
 
         TextView name;
         View selectedItem;
         private ClickListener clickListener;
-        public FavoriteFragmentHolder(View item, ClickListener clickListener){
+
+        public FavoriteFragmentHolder(View item, ClickListener clickListener) {
             super(item);
             name = (TextView) item.findViewById(R.id.name_item_favorite);
             selectedItem = itemView.findViewById(R.id.selected_overlay);
@@ -92,7 +94,7 @@ public class FavoriteFragmentAdapter extends SelectableAdapter<FavoriteFragmentA
 
         @Override
         public void onClick(View v) {
-            if(clickListener != null) clickListener.onItemSelected(getAdapterPosition());
+            if (clickListener != null) clickListener.onItemSelected(getAdapterPosition());
         }
 
         @Override
@@ -101,6 +103,7 @@ public class FavoriteFragmentAdapter extends SelectableAdapter<FavoriteFragmentA
             return clickListener != null && clickListener.onItemLongSelected(getAdapterPosition());
         }
     }
+
     public void removeItems(List<Integer> positions) {
         Collections.sort(positions, new Comparator<Integer>() {
             @Override
@@ -112,18 +115,18 @@ public class FavoriteFragmentAdapter extends SelectableAdapter<FavoriteFragmentA
             if (positions.size() == 1) {
                 removeItem(positions.get(0));
                 positions.remove(0);
-                MainFragment.recyclerView.setAdapter(new MainFragtentAdapter(MainEntity.listUmor()));
             } else {
-                for (int i = 0; i < positions.size();i ++){
+                for (int i = 0; i < positions.size(); i++) {
                     removeItem(positions.get(0));
                     positions.remove(0);
 
                 }
-                MainFragment.recyclerView.setAdapter(new MainFragtentAdapter(MainEntity.listUmor()));
+
             }
 
         }
     }
+
     public String selectItem(List<Integer> positions) {
         Collections.sort(positions, new Comparator<Integer>() {
             @Override

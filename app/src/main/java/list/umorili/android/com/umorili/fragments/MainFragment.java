@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.os.Bundle;
 import android.os.Handler;
+import android.os.NetworkOnMainThreadException;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
 import android.support.v4.app.LoaderManager;
@@ -31,9 +32,11 @@ import com.raizlabs.android.dbflow.structure.database.transaction.ITransaction;
 import org.androidannotations.annotations.Background;
 import org.androidannotations.annotations.EBean;
 import org.androidannotations.annotations.EFragment;
+import org.androidannotations.annotations.UiThread;
 import org.androidannotations.annotations.ViewById;
 
 import java.io.IOException;
+import java.util.ArrayList;
 import java.util.List;
 
 import list.umorili.android.com.umorili.ConstantManager;
@@ -51,13 +54,14 @@ import list.umorili.android.com.umorili.rest.models.GetListModel;
 
 @EFragment(R.layout.main_fragment)
 public class MainFragment extends Fragment {
-    public RestService restService = new RestService();
-    public List<GetListModel> getListModels;
+    public static RestService restService = new RestService();
+    public static List<GetListModel> getListModels;
     SwipeRefreshLayout mSwipeRefreshLayout;
     @ViewById(R.id.checkbox)
     CheckBox checkBox;
     public static RecyclerView recyclerView;
     public static Context context;
+    MainActivity mainActivity;
 
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
@@ -77,15 +81,17 @@ public class MainFragment extends Fragment {
                 android.R.color.holo_green_light,
                 android.R.color.holo_orange_light,
                 android.R.color.holo_red_light);
-        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
-            @Override
-            public void onRefresh() {
-                loadEntity();
-            }
-        });
+
         return view;
     }
 
+    @Background
+    public void loadMainEntity() {
+        mainActivity = new MainActivity(getListModels, restService);
+        mainActivity.loadMainEntity();
+        loadEntity();
+        mSwipeRefreshLayout.setRefreshing(false);
+    }
 
     @Background
     public void loadEntity() {
@@ -108,7 +114,6 @@ public class MainFragment extends Fragment {
                 @Override
                 public void onLoadFinished(Loader<List<MainEntity>> loader, List<MainEntity> data) {
                     recyclerView.setAdapter(new MainFragtentAdapter(data));
-                    mSwipeRefreshLayout.setRefreshing(false);
                 }
 
                 @Override
@@ -126,6 +131,12 @@ public class MainFragment extends Fragment {
         super.onStart();
         context = getActivity();
         loadEntity();
+        mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
+            @Override
+            public void onRefresh() {
+                loadMainEntity();
+            }
+        });
     }
 
     @Override

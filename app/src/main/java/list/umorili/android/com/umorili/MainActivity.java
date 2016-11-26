@@ -54,7 +54,6 @@ import list.umorili.android.com.umorili.fragments.MainFragment;
 import list.umorili.android.com.umorili.rest.RestService;
 import list.umorili.android.com.umorili.sync.BashSyncJob;
 
-@EBean
 @EActivity(R.layout.activity_main)
 public class MainActivity extends AppCompatActivity implements ViewPager.OnPageChangeListener, TabHost.OnTabChangeListener {
 
@@ -70,6 +69,13 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     @ViewById
     Toolbar toolbar;
 
+    public MainActivity() {
+    }
+
+    public MainActivity(List<GetListModel> getListModelList, RestService service) {
+        getListModels = getListModelList;
+        restService = service;
+    }
 
     public void initViewPager() {
         viewPager = (ViewPager) findViewById(R.id.viewPager);
@@ -160,11 +166,22 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     }
 
 
-    @Background
-    public void loadMainEntity() {
+    public void loadMainEntity(){
+
+        Thread newThread = new Thread(new Runnable() {
+            @Override
+            public void run() {
+                try {
+                    getListModels = (restService.viewListInMainFragmenr(ConstantManager.SITE, ConstantManager.NAME, ConstantManager.NUM));
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
+        newThread.start();
         try {
-            getListModels = (restService.viewListInMainFragmenr(ConstantManager.SITE, ConstantManager.NAME, ConstantManager.NUM));
-        } catch (IOException e) {
+            newThread.join();
+        } catch (InterruptedException e) {
             e.printStackTrace();
         }
         final List<GetListModel> quotes = getListModels;
@@ -183,11 +200,13 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
                 }
             }
         });
+
     }
 
 
     public void delete() {
         MainEntity.deleteAll();
+
     }
 
     @Override
