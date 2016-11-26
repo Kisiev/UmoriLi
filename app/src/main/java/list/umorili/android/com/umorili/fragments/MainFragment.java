@@ -90,13 +90,11 @@ public class MainFragment extends Fragment {
         mainActivity = new MainActivity(getListModels, restService);
         mainActivity.loadMainEntity();
         loadEntity();
-        mSwipeRefreshLayout.setRefreshing(false);
     }
 
     @Background
     public void loadEntity() {
         try {
-
 
             getLoaderManager().restartLoader(ConstantManager.ID, null, new LoaderManager.LoaderCallbacks<List<MainEntity>>() {
                 @Override
@@ -130,13 +128,15 @@ public class MainFragment extends Fragment {
     public void onStart() {
         super.onStart();
         context = getActivity();
-        loadEntity();
+        loadMainEntity();
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
                 loadMainEntity();
+                mSwipeRefreshLayout.setRefreshing(false);
             }
         });
+
     }
 
     @Override

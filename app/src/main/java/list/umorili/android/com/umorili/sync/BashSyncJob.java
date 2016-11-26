@@ -46,7 +46,7 @@ public class BashSyncJob extends Job {
     private boolean isSoundEnabled;
     private boolean isLedEnabled;
 
-    private SharedPreferences mSharedPreferences;
+
     private String globalNotificationsKey;
     private String vibrateNotificationsKey;
     private String soundNotificationsKey;
@@ -70,14 +70,14 @@ public class BashSyncJob extends Job {
         } catch (IOException e) {
             e.printStackTrace();
         }
-        if (countNotify >= 1) sendNotification();
+        if (countNotify > 1) sendNotification();
         countNotify = 1;
         return Result.SUCCESS;
     }
 
     private void init() {
 
-
+        SharedPreferences mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
         globalNotificationsKey = getContext().getString(R.string.pref_enable_notifications_key);
         vibrateNotificationsKey = getContext().getString(R.string.pref_enable_vibrate_notifications_key);
         soundNotificationsKey = getContext().getString(R.string.pref_enable_sound_notifications_key);

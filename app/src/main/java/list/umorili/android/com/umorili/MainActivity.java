@@ -61,6 +61,7 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     public static List<GetListModel> getListModels;
     private static SharedPreferences sharedPreferences;
     public static String service_setting;
+    private static SwipeRefreshLayout swipeRefreshLayout;
     public static FlowContentObserver observer = new FlowContentObserver();
     ViewPager viewPager;
 
@@ -72,9 +73,9 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     public MainActivity() {
     }
 
-    public MainActivity(List<GetListModel> getListModelList, RestService service) {
+    public MainActivity(List<GetListModel> getListModelList, RestService service ) {
         getListModels = getListModelList;
-        restService = service;
+        restService = service;;
     }
 
     public void initViewPager() {
@@ -200,7 +201,6 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
                 }
             }
         });
-
     }
 
 
