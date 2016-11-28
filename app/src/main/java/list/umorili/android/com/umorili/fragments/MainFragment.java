@@ -72,6 +72,7 @@ public class MainFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, @Nullable ViewGroup container, @Nullable Bundle savedInstanceState) {
         setHasOptionsMenu(true);
+        loadMainEntity();
         View view = inflater.inflate(R.layout.main_fragment, container, false);
         recyclerView = (RecyclerView) view.findViewById(R.id.main_fragment_recycler);
         recyclerView.setLayoutManager(new LinearLayoutManager(getActivity()));
@@ -111,7 +112,7 @@ public class MainFragment extends Fragment {
                 @Override
                 public void onLoadFinished(Loader<List<MainEntity>> loader, List<MainEntity> data) {
                     recyclerView.setAdapter(new MainFragtentAdapter(data));
-                    mSwipeRefreshLayout.setRefreshing(false);
+
                 }
 
                 @Override
@@ -128,16 +129,11 @@ public class MainFragment extends Fragment {
     public void onStart() {
         super.onStart();
         context = getActivity();
-        loadMainEntity();
         mSwipeRefreshLayout.setOnRefreshListener(new SwipeRefreshLayout.OnRefreshListener() {
             @Override
             public void onRefresh() {
-                new Handler().postDelayed(new Runnable() {
-                    @Override
-                    public void run() {
-                        loadMainEntity();
-                    }
-                }, 1000);
+                loadMainEntity();
+                mSwipeRefreshLayout.setRefreshing(false);
             }
         });
 

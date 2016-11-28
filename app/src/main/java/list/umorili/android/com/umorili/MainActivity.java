@@ -141,8 +141,6 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
 
     @AfterViews
     public void main() {
-        delete();
-        loadMainEntity();
         sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
         observer.registerForContentChanges(this, MainEntity.class);
 
