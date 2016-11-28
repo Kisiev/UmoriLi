@@ -27,10 +27,9 @@ import list.umorili.android.com.umorili.fragments.FavoriteFragment;
 public class MainFragtentAdapter extends RecyclerView.Adapter<MainFragtentAdapter.MainFragmentHolder> {
 
     private List<MainEntity> mainEntityList;
-    public View viewForPager;
     RecyclerView recyclerView;
 
-    private void setFavoriteList(final MainFragmentHolder holder) {
+    public void setFavoriteList(final MainFragmentHolder holder) {
         new Handler().post(new Runnable() {
             @Override
             public void run() {

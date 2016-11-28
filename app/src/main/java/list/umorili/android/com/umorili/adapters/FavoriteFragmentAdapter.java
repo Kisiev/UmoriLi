@@ -1,7 +1,10 @@
 package list.umorili.android.com.umorili.adapters;
 
 import android.content.Context;
+import android.os.Bundle;
 import android.os.Handler;
+import android.support.v4.app.LoaderManager;
+import android.support.v4.content.Loader;
 import android.support.v7.widget.RecyclerView;
 import android.view.LayoutInflater;
 import android.view.View;
@@ -10,10 +13,13 @@ import android.widget.TextView;
 
 import com.raizlabs.android.dbflow.sql.language.SQLite;
 
+import java.io.FileDescriptor;
+import java.io.PrintWriter;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
 
+import list.umorili.android.com.umorili.ConstantManager;
 import list.umorili.android.com.umorili.R;
 import list.umorili.android.com.umorili.entity.FavoriteEntity;
 import list.umorili.android.com.umorili.entity.MainEntity;
@@ -73,7 +79,6 @@ public class FavoriteFragmentAdapter extends SelectableAdapter<FavoriteFragmentA
     private void updateTables(int position) {
         MainEntity.updateFavorite(favoriteEntityList.get(position).getId_list(), false);
         FavoriteEntity.delete(favoriteEntityList.get(position).getId_list());
-        MainFragment.recyclerView.setAdapter(new MainFragtentAdapter(MainEntity.listUmor()));
     }
 
     class FavoriteFragmentHolder extends RecyclerView.ViewHolder implements View.OnClickListener, View.OnLongClickListener {

@@ -90,7 +90,7 @@ public class FavoriteFragment extends Fragment {
             public void onClick(View view) {
                 FavoriteEntity.deleteAllFavorite();
                 MainEntity.updateFavoriteAll(false);
-                MainFragment.recyclerView.setAdapter(new MainFragtentAdapter(MainEntity.listUmor()));
+              // MainFragment.recyclerView.setAdapter(new MainFragtentAdapter(MainEntity.listUmor()));
                 loadEntity();
                 dialog.dismiss();
 

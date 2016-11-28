@@ -62,7 +62,6 @@ public class MainFragment extends Fragment {
     public static RecyclerView recyclerView;
     public static Context context;
     MainActivity mainActivity;
-
     @Override
     public void onCreate(@Nullable Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -94,7 +93,6 @@ public class MainFragment extends Fragment {
     }
 
     public void loadEntity() {
-        try {
 
             getLoaderManager().restartLoader(ConstantManager.ID, null, new LoaderManager.LoaderCallbacks<List<MainEntity>>() {
                 @Override
@@ -119,9 +117,7 @@ public class MainFragment extends Fragment {
                 public void onLoaderReset(Loader<List<MainEntity>> loader) {
                 }
             });
-        } catch (RuntimeException e) {
 
-        }
     }
 
 
