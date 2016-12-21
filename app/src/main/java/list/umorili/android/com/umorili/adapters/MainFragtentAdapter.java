@@ -49,7 +49,7 @@ public class MainFragtentAdapter extends RecyclerView.Adapter<MainFragtentAdapte
                             MainEntity.updateFavorite(mainEntityList.get(holder.getAdapterPosition()).getId(), false);
                         }
                         mainEntityList = MainEntity.listUmor();
-                        FavoriteFragment.adapter.favoriteEntityList = null;
+                        FavoriteFragment.adapter.favoriteEntityList = FavoriteEntity.selectedALL();
 
                         FavoriteFragment.adapter = new FavoriteFragmentAdapter(FavoriteEntity.selectedALL(), FavoriteFragment.adapter.clickListener, FavoriteFragment.context);
                         FavoriteFragment.recyclerView.setAdapter(FavoriteFragment.adapter);
