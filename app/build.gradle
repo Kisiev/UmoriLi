@@ -48,4 +48,6 @@ dependencies {
     compile 'com.android.support:preference-v7:25.0.0'
     compile 'com.facebook.stetho:stetho:1.4.1'
 
+    compile 'jp.wasabeef:recyclerview-animators:2.2.4'
+
 }

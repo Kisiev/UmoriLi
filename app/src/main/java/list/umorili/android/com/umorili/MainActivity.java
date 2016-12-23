@@ -73,9 +73,10 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
     public MainActivity() {
     }
 
-    public MainActivity(List<GetListModel> getListModelList, RestService service ) {
+    public MainActivity(List<GetListModel> getListModelList, RestService service) {
         getListModels = getListModelList;
-        restService = service;;
+        restService = service;
+        ;
     }
 
     public void initViewPager() {
@@ -166,7 +167,6 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
 
 
     public void loadMainEntity() {
-
         Thread newThread = new Thread(new Runnable() {
             @Override
             public void run() {
@@ -200,7 +200,6 @@ public class MainActivity extends AppCompatActivity implements ViewPager.OnPageC
             e.printStackTrace();
         }
     }
-
 
     public void delete() {
         MainEntity.deleteAll();

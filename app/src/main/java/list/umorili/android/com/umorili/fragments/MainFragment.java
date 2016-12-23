@@ -39,6 +39,13 @@ import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
 
+import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter;
+import jp.wasabeef.recyclerview.adapters.SlideInBottomAnimationAdapter;
+import jp.wasabeef.recyclerview.adapters.SlideInLeftAnimationAdapter;
+import jp.wasabeef.recyclerview.animators.FadeInAnimator;
+import jp.wasabeef.recyclerview.animators.FadeInLeftAnimator;
+import jp.wasabeef.recyclerview.animators.FadeInUpAnimator;
+import jp.wasabeef.recyclerview.animators.SlideInRightAnimator;
 import list.umorili.android.com.umorili.ConstantManager;
 import list.umorili.android.com.umorili.MainActivity;
 import list.umorili.android.com.umorili.MainActivity_;
@@ -109,7 +116,9 @@ public class MainFragment extends Fragment {
 
                 @Override
                 public void onLoadFinished(Loader<List<MainEntity>> loader, List<MainEntity> data) {
-                    recyclerView.setAdapter(new MainFragtentAdapter(data));
+                    SlideInLeftAnimationAdapter slideInLeftAnimationAdapter = new SlideInLeftAnimationAdapter(new MainFragtentAdapter(data));
+                    slideInLeftAnimationAdapter.setDuration(130);
+                    recyclerView.setAdapter(slideInLeftAnimationAdapter);
 
                 }
 

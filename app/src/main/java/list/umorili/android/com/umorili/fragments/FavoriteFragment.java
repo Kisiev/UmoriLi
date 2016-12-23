@@ -44,6 +44,10 @@ import org.androidannotations.annotations.ViewById;
 
 import java.util.List;
 
+import jp.wasabeef.recyclerview.adapters.ScaleInAnimationAdapter;
+import jp.wasabeef.recyclerview.adapters.SlideInBottomAnimationAdapter;
+import jp.wasabeef.recyclerview.adapters.SlideInLeftAnimationAdapter;
+import jp.wasabeef.recyclerview.animators.FadeInLeftAnimator;
 import list.umorili.android.com.umorili.ConstantManager;
 import list.umorili.android.com.umorili.MainActivity_;
 import list.umorili.android.com.umorili.R;
@@ -189,7 +193,9 @@ public class FavoriteFragment extends Fragment {
                                 }
                             }, getActivity());
 
-                            recyclerView.setAdapter(adapter);
+                            SlideInLeftAnimationAdapter slideInLeftAnimationAdapter = new SlideInLeftAnimationAdapter(adapter);
+                            slideInLeftAnimationAdapter.setDuration(130);
+                            recyclerView.setAdapter(slideInLeftAnimationAdapter);
                             mSwipeRefreshLayout.setRefreshing(false);
 
                         }
