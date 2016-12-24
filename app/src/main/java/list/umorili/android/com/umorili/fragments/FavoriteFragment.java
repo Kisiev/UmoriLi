@@ -94,7 +94,7 @@ public class FavoriteFragment extends Fragment {
             public void onClick(View view) {
                 FavoriteEntity.deleteAllFavorite();
                 MainEntity.updateFavoriteAll(false);
-              // MainFragment.recyclerView.setAdapter(new MainFragtentAdapter(MainEntity.listUmor()));
+                // MainFragment.recyclerView.setAdapter(new MainFragtentAdapter(MainEntity.listUmor()));
                 loadEntity();
                 dialog.dismiss();
 
@@ -154,6 +154,7 @@ public class FavoriteFragment extends Fragment {
     public void onCreateOptionsMenu(Menu menu, MenuInflater inflater) {
         inflater.inflate(R.menu.menu_activity, menu);
     }
+
     public void loadEntity() {
         try {
             new Handler().post(new Runnable() {
@@ -206,7 +207,7 @@ public class FavoriteFragment extends Fragment {
                     });
                 }
             });
-        } catch (RuntimeException r){
+        } catch (RuntimeException r) {
 
         }
 
@@ -219,6 +220,7 @@ public class FavoriteFragment extends Fragment {
             mode.getMenuInflater().inflate(R.menu.contextual_action_bar, menu);
             return true;
         }
+
         @Override
         public boolean onPrepareActionMode(ActionMode mode, Menu menu) {
             return false;
@@ -247,7 +249,8 @@ public class FavoriteFragment extends Fragment {
                         Toast.makeText(getActivity(), R.string.copyTo, Toast.LENGTH_SHORT).show();
                         actionMode.finish();
                         adapter.clearSelection();
-                    } else Toast.makeText(getActivity(), R.string.error_copy, Toast.LENGTH_SHORT).show();
+                    } else
+                        Toast.makeText(getActivity(), R.string.error_copy, Toast.LENGTH_SHORT).show();
                     return true;
                 default:
                     return false;

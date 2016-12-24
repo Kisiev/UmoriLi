@@ -41,13 +41,13 @@ public class BashSyncJob extends Job {
     private static final int LED_LIGHTS_TIME_OFF = 1500;
     private static final int NOTIFICATION_ID = 4005;
     private NotificationManager mNotificationManager;
-    private boolean isNotificationsEnabled;
+    private static boolean isNotificationsEnabled;
     private boolean isVibrateEnabled;
     private boolean isSoundEnabled;
     private boolean isLedEnabled;
 
-
-    private String globalNotificationsKey;
+    public static SharedPreferences mSharedPreferences;
+    private static String globalNotificationsKey;
     private String vibrateNotificationsKey;
     private String soundNotificationsKey;
     private String ledNotificationsKey;
@@ -77,7 +77,7 @@ public class BashSyncJob extends Job {
 
     private void init() {
 
-        SharedPreferences mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
+        mSharedPreferences = PreferenceManager.getDefaultSharedPreferences(getContext());
         globalNotificationsKey = getContext().getString(R.string.pref_enable_notifications_key);
         vibrateNotificationsKey = getContext().getString(R.string.pref_enable_vibrate_notifications_key);
         soundNotificationsKey = getContext().getString(R.string.pref_enable_sound_notifications_key);
@@ -149,6 +149,7 @@ public class BashSyncJob extends Job {
                 .setAutoCancel(true)
                 .setContentIntent(pendingIntent);
 
+
         if (isLedEnabled) {
             builder.setLights(Color.YELLOW, LED_LIGHTS_TIME_ON, LED_LIGHTS_TIME_OFF);
         }
@@ -169,8 +170,14 @@ public class BashSyncJob extends Job {
     }
 
     public static int schedulePeriodicJob() {
-        return new JobRequest.Builder(BashSyncJob.TAG)
-                .setPeriodic(TimeUnit.MINUTES.toMillis(15), TimeUnit.MINUTES.toMillis(5))
+        if (isNotificationsEnabled) {
+            return new JobRequest.Builder(BashSyncJob.TAG)
+                    .setPeriodic(TimeUnit.MINUTES.toMillis(15), TimeUnit.MINUTES.toMillis(5))
+                    .setPersisted(true)
+                    .build()
+                    .schedule();
+        } else  return new JobRequest.Builder(BashSyncJob.TAG)
+                .setPeriodic(TimeUnit.HOURS.toMillis(24), TimeUnit.HOURS.toMillis(1))
                 .setPersisted(true)
                 .build()
                 .schedule();
